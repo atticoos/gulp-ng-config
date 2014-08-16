@@ -31,3 +31,7 @@ angular.module('MyModule')
 .constant('object', {"one":2,"three":["four"]})
 .constant('array', ["one",2,{"three":"four"},[5,"six"]]);
 ```
+
+### Roadmap
+- tests
+- allow json filename instead of object -- often useful 

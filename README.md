@@ -27,7 +27,7 @@ Where `configFile.json` contains:
 And then generates `config.js` with the following output:
 
 ```html
-angular.module('MyModule')
+angular.module('myApp.config')
 .constant('string', "my string")
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]})

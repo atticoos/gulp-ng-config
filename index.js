@@ -1,17 +1,16 @@
 var through = require('through2'),
     combine = require('stream-combiner'),
+    gutil = require('gulp-util'),
     _ = require('lodash'),
     fs = require('fs');
 
-module.exports = function (fileName, moduleName) {
-  if (!fileName) throw new PluginError('gulp-ng-config', 'Missing fileName option for gulp-ng-config');
+module.exports = function (moduleName) {
   if (!moduleName) throw new PluginError('gulp-ng-config', 'Missing required moduleName option for gulp-ng-config');
-  var outputFileStream = fs.createWriteStream(fileName),
-      templateFile = fs.readFileSync(__dirname + '/template.html', 'utf8'),
+  var templateFile = fs.readFileSync(__dirname + '/template.html', 'utf8'),
       jsonReader,
       templater;
 
-  jsonReader = through.obj(function (file, encoding, callback) {
+  return through.obj(function (file, encoding, callback) {
     var constants = [],
         jsonObj;
     try {
@@ -28,15 +27,10 @@ module.exports = function (fileName, moduleName) {
       });
     });
 
-    this.push(constants);
+    var templateOutput = _.template(templateFile, {moduleName: moduleName, constants: constants});
+    file.path = gutil.replaceExtension(file.path, '.js');
+    file.contents = new Buffer(templateOutput);
+    this.push(file);
     callback();
   });
-
-  templater = through.obj(function (chunk, encoding, callback) {
-    var templateOutput = _.template(templateFile, {moduleName: moduleName, constants: chunk});
-    this.push(templateOutput);
-    callback();
-  });
-
-  return combine(jsonReader, templater, outputFileStream);
 };

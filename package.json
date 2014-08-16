@@ -1,0 +1,22 @@
+{
+  "name": "gulp-ng-config",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajwhite/gulp-ng-config.git"
+  },
+  "author": "Atticus White",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ajwhite/gulp-ng-config/issues"
+  },
+  "homepage": "https://github.com/ajwhite/gulp-ng-config",
+  "dependencies": {
+    "through": "^2.3.4"
+  }
+}

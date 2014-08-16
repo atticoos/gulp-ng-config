@@ -2,6 +2,9 @@
 It's often useful to generate a file of constants, usually as environment variables, for your Angular apps.
 This Gulp plugin will allow you to provide an object of properties and will generate an Angular module of constants.
 
+### To Install:
+`npm install gulp-ng-config`
+
 ### How it works
 It's pretty simple:
 `gulpNgConfig(moduleName)`

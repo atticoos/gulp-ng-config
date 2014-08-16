@@ -11,17 +11,19 @@ It's pretty simple:
 ### Example Usage
 ```javascript
 gulp.task('test', function () {
-  gulp.src('testfile.json')
-  .pipe(gulpNgConfig('output.js', {
-    moduleName: 'MyModule',
-    constants: {
-      string: 'my string',
-      integer: 12345,
-      object: {one: 2, three: ['four']},
-      array: ['one', 2, {three: 'four'}, [5, 'six']]
-    }
-  }));
+  gulp.src('configFile.json')
+  .pipe(gulpNgConfig('output.js', 'myModule'));
 });
+```
+Where `configFile.json` contains:
+```json
+{
+  "string": "my string",
+  "integer": 12345,
+  "object": {"one": 2, "three": ["four"]},
+  "array": ["one", 2, {"three": "four"}, [5, "six"]]
+}
+
 ```
 ### Example Output
 ```html
@@ -34,4 +36,3 @@ angular.module('MyModule')
 
 ### Roadmap
 - tests
-- allow json filename instead of object -- often useful 

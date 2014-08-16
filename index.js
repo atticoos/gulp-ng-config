@@ -2,15 +2,16 @@ var through = require('through2'),
     combine = require('stream-combiner'),
     gutil = require('gulp-util'),
     _ = require('lodash'),
-    fs = require('fs');
+    fs = require('fs'),
+    templateFilePath = __dirname + '/template.html';
 
-module.exports = function (moduleName) {
+
+function gulpNgConfig(moduleName, overridableProperties) {
   if (!moduleName) throw new PluginError('gulp-ng-config', 'Missing required moduleName option for gulp-ng-config');
-  var templateFile = fs.readFileSync(__dirname + '/template.html', 'utf8'),
-      jsonReader,
-      templater;
+  var templateFile = fs.readFileSync(templateFilePath, 'utf8'),
+      overridableProperties = overridableProperties || {};
 
-  return through.obj(function (file, encoding, callback) {
+  var stream = through.obj(function (file, encoding, callback) {
     var constants = [],
         jsonObj;
     try {
@@ -19,11 +20,12 @@ module.exports = function (moduleName) {
       throw new PluginError('gulp-ng-config', 'invaild JSON file provided');
     }
 
+    jsonObj = _.assign(jsonObj, overridableProperties);
+
     _.each(jsonObj, function (value, key) {
-      value = JSON.stringify(value);
       constants.push({
         name: key,
-        value: value
+        value: JSON.stringify(value)
       });
     });
 
@@ -33,4 +35,9 @@ module.exports = function (moduleName) {
     this.push(file);
     callback();
   });
+
+
+  return stream;
 };
+
+module.exports = gulpNgConfig;

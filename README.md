@@ -24,7 +24,7 @@ Where `configFile.json` contains:
   "array": ["one", 2, {"three": "four"}, [5, "six"]]
 }
 ```
-And then generates `config.js` with the following output:
+And then generates `configFile.js` with the following output:
 
 ```html
 angular.module('myApp.config')
@@ -32,6 +32,31 @@ angular.module('myApp.config')
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]})
 .constant('array', ["one",2,{"three":"four"},[5,"six"]]);
+```
+<br/>
+
+
+### Additional options
+You can also override properties or add more by including them in the gulp tasks:
+```javascript
+gulp.task('test', function () {
+  gulp.src('configFile.json')
+  .pipe(gulpNgConfig('myApp.config', {
+    string: 'overridden',
+    random:'value'
+  }))
+  .pipe(gulp.dest('.'))
+});
+```
+Generating `configFile.js`
+```html
+angular.module('myApp.config')
+.constant('string', "overridden")
+.constant('integer', 12345)
+.constant('object', {"one":2,"three":["four"]})
+.constant('array', ["one",2,{"three":"four"},[5,"six"]])
+.constant('random', "value");
+
 ```
 
 ### Roadmap

@@ -1,11 +1,20 @@
 {
   "name": "gulp-ng-config",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "AngularJS configuration generator for a module of constants",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "keywords": [
+    "gulp",
+    "grunt",
+    "config",
+    "angular",
+    "ng",
+    "gulpfriendly",
+    "gulpplugin"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/ajwhite/gulp-ng-config.git"

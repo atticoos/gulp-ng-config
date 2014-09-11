@@ -20,7 +20,7 @@ function gulpNgConfig(moduleName, overridableProperties) {
       throw new PluginError('gulp-ng-config', 'invaild JSON file provided');
     }
 
-    jsonObj = _.assign(jsonObj, overridableProperties);
+    jsonObj = _.merge(jsonObj, overridableProperties);
 
     _.each(jsonObj, function (value, key) {
       constants.push({

@@ -20,7 +20,7 @@
     "url": "https://github.com/ajwhite/gulp-ng-config.git"
   },
   "author": "Atticus White",
-  "license": "ISC",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/ajwhite/gulp-ng-config/issues"
   },

@@ -4,7 +4,7 @@
   "description": "AngularJS configuration generator for a module of constants",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp test"
   },
   "keywords": [
     "gulp",
@@ -32,6 +32,9 @@
     "through2": "^0.6.1"
   },
   "devDependencies": {
-    "gulp": "^3.8.7"
+    "chai": "^1.9.1",
+    "gulp": "^3.8.7",
+    "gulp-mocha": "^1.1.0",
+    "mocha": "^1.21.4"
   }
 }

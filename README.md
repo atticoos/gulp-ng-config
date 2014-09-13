@@ -36,7 +36,7 @@ Where `configFile.json` contains:
 ```
 And then generates `configFile.js` with the following output:
 
-```html
+```js
 angular.module('myApp.config')
 .constant('string', "my string")
 .constant('integer', 12345)
@@ -59,7 +59,7 @@ gulp.task('test', function () {
 });
 ```
 Generating `configFile.js`
-```html
+```js
 angular.module('myApp.config')
 .constant('string', "overridden")
 .constant('integer', 12345)
@@ -68,6 +68,3 @@ angular.module('myApp.config')
 .constant('random', "value");
 
 ```
-
-### Roadmap
-- tests

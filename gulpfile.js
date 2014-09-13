@@ -15,9 +15,10 @@ gulp.task('style', function () {
   .pipe(jscs());
 });
 
-gulp.task('test', function () {
+gulp.task('unittest', function () {
   gulp.src('test/stream.js')
   .pipe(mocha({reporter: 'spec'}));
 });
 
-gulp.task('default', ['lint', 'style', 'test']);
+gulp.task('test', ['lint', 'style', 'unittest']);
+gulp.task('default', ['test']);

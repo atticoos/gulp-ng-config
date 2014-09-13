@@ -90,7 +90,7 @@ describe('gulp-ng-config', function () {
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       .pipe(plugin('gulp-ng-config', {
         one: {
-          two: "four"
+          two: 'four'
         }
       }))
       .pipe(through.obj(function (file) {
@@ -103,7 +103,7 @@ describe('gulp-ng-config', function () {
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       .pipe(plugin('gulp-ng-config', {
         one: {
-          three: "four"
+          three: 'four'
         }
       }))
       .pipe(through.obj(function (file) {

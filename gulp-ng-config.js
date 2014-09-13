@@ -1,5 +1,4 @@
 var through = require('through2'),
-    combine = require('stream-combiner'),
     gutil = require('gulp-util'),
     _ = require('lodash'),
     fs = require('fs'),
@@ -8,7 +7,7 @@ var through = require('through2'),
 
 const PLUGIN_NAME = 'gulp-ng-config';
 
-function gulpNgConfig(moduleName, overridableProperties) {
+function gulpNgConfig (moduleName, overridableProperties) {
   var templateFile, stream;
 
   if (!moduleName) {
@@ -50,6 +49,6 @@ function gulpNgConfig(moduleName, overridableProperties) {
   });
 
   return stream;
-};
+}
 
 module.exports = gulpNgConfig;

@@ -3,5 +3,5 @@ var gulp = require('gulp'),
 
 gulp.task('test', function () {
   gulp.src('test/stream.js')
-  .pipe(mocha({reporter: 'nyan'}));
+  .pipe(mocha({reporter: 'spec'}));
 })

@@ -1,2 +1,2 @@
-angular.module('<%= moduleName %>')<% _.forEach(constants, function (constant) { %>
+angular.module('<%= moduleName %>', [])<% _.forEach(constants, function (constant) { %>
 .constant('<%= constant.name %>', <%= constant.value %>)<% }); %>;

@@ -25,11 +25,11 @@ function gulpNgConfig (moduleName, overridableProperties) {
     try {
       jsonObj = JSON.parse(file.contents.toString('utf8'));
     } catch (e) {
-      throw new PluginError(PLUGIN_NAME, 'invaild JSON file provided');
+      this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
     }
 
     if (!_.isPlainObject(jsonObj)) {
-      throw new PluginError(PLUGIN_NAME, 'invalid JSON object provided');
+      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
     }
 
     jsonObj = _.merge(jsonObj, overridableProperties);

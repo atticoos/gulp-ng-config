@@ -5,12 +5,14 @@ describe('gulp-ng-config', function () {
       gulp = require('gulp'),
       path = require('path'),
       chai = require('chai'),
+      spies = require('chai-spies'),
       File = require('vinyl'),
       es = require('event-stream'),
       through = require('through2'),
       fs = require('fs');
 
   before(function () {
+    chai.use(spies);
     expect = chai.expect;
     should = chai.should;
   });
@@ -23,8 +25,10 @@ describe('gulp-ng-config', function () {
     });
 
     it ('should only accept files in JSON format', function () {
-      var file, stream;
+      var file, stream, spy;
       stream = plugin('asdf');
+      spy = chai.spy();
+      stream.on('error', spy);
 
       file = new File({
         path: 'mock/path.json',
@@ -32,37 +36,48 @@ describe('gulp-ng-config', function () {
       });
       expect(function () {
         stream.write(file);
-      }).to.throw(Error);
+      }).to.not.throw(Error);
+      expect(spy).to.have.been.called.twice();
 
       stream = plugin('asdf');
+      spy = chai.spy();
+      stream.on('error', spy);
       file = new File ({
         path: 'mock/path.json',
         contents: new Buffer('a string')
       });
       expect(function () {
         stream.write(file);
-      }).to.throw(Error);
+      }).to.not.throw(Error);
+        expect(spy).to.have.been.called.twice();
 
       stream = plugin('asdf');
+      spy = chai.spy();
+      stream.on('error', spy);
       file = new File({
         path: 'mock/path.json',
         contents: new Buffer(123)
       });
       expect(function () {
         stream.write(file);
-      }).to.throw(Error);
+      }).to.not.throw(Error);
+        expect(spy).to.have.been.called.twice();
     });
 
-    it ('should throw an error on malformed JSON', function () {
-      var file, stream;
+    it ('should emit an error on malformed JSON', function () {
+      var file, stream, spy;
       stream = plugin('asdf');
+      spy = chai.spy();
+      stream.on('error', spy);
+
       file = new File({
         path: 'mock/path.json',
         contents: new Buffer('{a:b}')
       });
       expect(function () {
         stream.write(file);
-      }).to.throw(Error);
+      }).to.not.throw();
+      expect(spy).to.have.been.called();
     });
   });
 

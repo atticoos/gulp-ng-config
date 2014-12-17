@@ -6,11 +6,13 @@ var through = require('through2'),
     PluginError = gutil.PluginError;
 
 const PLUGIN_NAME = 'gulp-ng-config';
+const WRAP_TEAMPLTE = '(function () { \n return <%= module %>\n \n})();';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
   defaults = {
-    createModule: true
+    createModule: true,
+    wrap: false
   };
 
   if (!moduleName) {
@@ -24,7 +26,8 @@ function gulpNgConfig (moduleName, configuration) {
   stream = through.obj(function (file, encoding, callback) {
     var constants = [],
         templateOutput,
-        jsonObj;
+        jsonObj,
+        wrapTemplate;
 
     try {
       jsonObj = JSON.parse(file.contents.toString('utf8'));
@@ -50,6 +53,18 @@ function gulpNgConfig (moduleName, configuration) {
       moduleName: moduleName,
       constants: constants
     });
+
+    if (configuration.wrap) {
+      if (typeof configuration.wrap === 'string') {
+        wrapTemplate = configuration.wrap;
+      } else {
+        wrapTemplate = WRAP_TEAMPLTE;
+      }
+      templateOutput = _.template(wrapTemplate, {
+        module: templateOutput
+      });
+    }
+
     file.path = gutil.replaceExtension(file.path, '.js');
     file.contents = new Buffer(templateOutput);
     this.push(file);

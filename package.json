@@ -1,6 +1,6 @@
 {
   "name": "gulp-ng-config",
-  "version": "0.1.8",
+  "version": "1.0.0",
   "description": "AngularJS configuration generator for a module of constants",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,9 @@
     "gulp",
     "grunt",
     "config",
+    "constant",
     "angular",
+    "angularjs",
     "ng",
     "gulpfriendly",
     "gulpplugin"

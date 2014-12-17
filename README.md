@@ -18,6 +18,7 @@ It's pretty simple:
 
 
 ## Example Usage
+We start with our task. Our source file is a JSON file containing our configuration. We will pipe this through `gulpNgConfig` and out will come an angular module of constants.
 ```javascript
 gulp.task('test', function () {
   gulp.src('configFile.json')
@@ -25,7 +26,7 @@ gulp.task('test', function () {
   .pipe(gulp.dest('.'))
 });
 ```
-Where `configFile.json` contains:
+Assume that `configFile.json` contains:
 ```json
 {
   "string": "my string",
@@ -34,7 +35,7 @@ Where `configFile.json` contains:
   "array": ["one", 2, {"three": "four"}, [5, "six"]]
 }
 ```
-And then generates `configFile.js` with the following output:
+Running `gulp test` will take `configFile.json` and produce `configFile.js` with the following content:
 
 ```js
 angular.module('myApp.config', [])
@@ -43,20 +44,22 @@ angular.module('myApp.config', [])
 .constant('object', {"one":2,"three":["four"]})
 .constant('array', ["one",2,{"three":"four"},[5,"six"]]);
 ```
-<br/>
-
-
-## Configuration
-Currently there are two configurable options for this plugin:
-```javascript
-gulpNgConfig('moduleName', {
-  constants: object,
-  createModule: boolean,
-  wrap: boolean | string
+We now can include this configuration module in our main app and access the constants
+```js
+angular.module('myApp', ['myApp.config']).run(function (string) {
+  console.log("The string constant!", string) // outputs "my string"
 });
 ```
 
-### options.constants
+
+## Configuration
+Currently there are a few configurable options to control the output of your configuration file:
+- [options.constants](#options.constants)
+- [options.createModule](#options.createModule)
+- [options.wrap](#options.wrap)
+
+
+### <a id="options.constants"></a>options.constants
 Type: `Object` Optional
 
 You can also override properties from your json file or add more by including them in the gulp tasks:
@@ -79,7 +82,7 @@ angular.module('myApp.config', [])
 
 ```
 
-### options.createModule
+### <a id="options.createModule"></a>options.createModule
 Type: `Boolean` Default value: `true` Optional
 
 By default, a new module is created with the name supplied. You can access an existing module, rather than creating one, by setting `createModule` to false.
@@ -95,7 +98,7 @@ angular.module('myApp.config')
 .constant('..', '..');
 ```
 
-### options.wrap
+### <a id="options.wrap"></a>options.wrap
 Type: `Boolean` or `String` Default value: `false` Optional
 
 Wrap the configuration module in an IIFE or your own wrapper.
@@ -128,3 +131,5 @@ define(["angular"], function () {
 .constant('..', '..');
 });
 ```
+## Contributing
+Contributions, issues, suggestions, and all other remarks are welcomed. To run locally just fork &amp; clone the project and run `npm install`. Before submitting a Pull Request, make sure that your changes pass `gulp test`, and if you are introducing or changing a feature, that you add/update any tests involved.

@@ -51,7 +51,8 @@ Currently there are two configurable options for this plugin:
 ```javascript
 gulpNgConfig('moduleName', {
   constants: object,
-  createModule: boolean
+  createModule: boolean,
+  wrap: boolean | string
 });
 ```
 
@@ -60,15 +61,11 @@ Type: `Object` Optional
 
 You can also override properties from your json file or add more by including them in the gulp tasks:
 ```javascript
-gulp.task('test', function () {
-  gulp.src('configFile.json')
-  .pipe(gulpNgConfig('myApp.config', {
-    constants: {
-      string: 'overridden',
-      random: 'value'
-    }
-  }))
-  .pipe(gulp.dest('.'))
+gulpNgConfig('myApp.config', {
+  constants: {
+    string: 'overridden',
+    random: 'value'
+  }
 });
 ```
 Generating `configFile.js`
@@ -87,17 +84,47 @@ Type: `Boolean` Default value: `true` Optional
 
 By default, a new module is created with the name supplied. You can access an existing module, rather than creating one, by setting `createModule` to false.
 ```javascript
-gulp.task('test', function () {
-  gulp.src('configFile.json')
-  .pipe(gulpNgConfig('myApp.config', {
-    createModule: false
-  }))
-  .pipe(gulp.dest('.'))
+gulpNgConfig('myApp.config', {
+  createModule: false
 });
 ```
 
 This will produce `configFile.js` with an existing angular module
 ```javascript
 angular.module('myApp.config')
-.constant('..', '..')
+.constant('..', '..');
+```
+
+### options.wrap
+Type: `Boolean` or `String` Default value: `false` Optional
+
+Wrap the configuration module in an IIFE or your own wrapper.
+
+```js
+gulpNgConfig('myApp.config', {
+  wrap: true
+})
+```
+
+Will produce an IIFE wrapper for your configuration module:
+```javascript
+(function () {
+  return angular.module('myApp.config') // [] has been removed
+  .constant('..', '..');
+})();
+```
+
+You can provide a custom wrapper. Provide any string you want, just make sure to include `<%= module %>` for where you want to embed the angular module.
+```js
+gulpNgConfig('myApp.config', {
+  wrap: 'define(["angular"], function () {\n return <%= module %> \n});'
+});
+```
+
+The reuslting file will contain:
+```js
+define(["angular"], function () {
+ return angular.module('myApp.config')
+.constant('..', '..');
+});
 ```

@@ -100,6 +100,8 @@ describe('gulp-ng-config', function () {
         done();
       }));
     });
+  });
+  describe('plugin options', function () {
     it ('should generate the angular template with overridable properties', function (done) {
       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_3.js'));
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
@@ -135,6 +137,29 @@ describe('gulp-ng-config', function () {
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       .pipe(plugin('gulp-ng-config', {
         createModule: false
+      }))
+      .pipe(through.obj(function (file) {
+        expect(file.contents.toString()).to.equal(expectedOutput.toString());
+        done();
+      }));
+    });
+    it ('should generate the angular template with an IFFE if options.wrap', function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_6.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+      .pipe(plugin('gulp-ng-config', {
+        wrap: true
+      }))
+      .pipe(through.obj(function (file) {
+        expect(file.contents.toString()).to.equal(expectedOutput.toString());
+        done();
+      }));
+    });
+    it ('should generate the angular template with a custom wrap function if options.wrap is a string',
+    function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_7.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+      .pipe(plugin('gulp-ng-config', {
+        wrap: 'define([\'angular\', function () {\n return <%= module %>}]);\n'
       }))
       .pipe(through.obj(function (file) {
         expect(file.contents.toString()).to.equal(expectedOutput.toString());

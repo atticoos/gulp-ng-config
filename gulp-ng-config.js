@@ -6,7 +6,7 @@ var through = require('through2'),
     PluginError = gutil.PluginError;
 
 const PLUGIN_NAME = 'gulp-ng-config';
-const WRAP_TEAMPLTE = '(function () { \n return <%= module %>\n \n})();';
+const WRAP_TEAMPLTE = '(function () { \n return <%= module %>\n})();\n';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;

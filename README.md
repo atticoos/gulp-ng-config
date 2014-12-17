@@ -51,7 +51,8 @@ Currently there are two configurable options for this plugin:
 ```javascript
 gulpNgConfig('moduleName', {
   constants: object,
-  createModule: boolean
+  createModule: boolean,
+  wrap: boolean | string
 });
 ```
 
@@ -99,5 +100,39 @@ gulp.task('test', function () {
 This will produce `configFile.js` with an existing angular module
 ```javascript
 angular.module('myApp.config')
-.constant('..', '..')
+.constant('..', '..');
+```
+
+### options.wrap
+Type: `Boolean` or `String` Default value: `false` Optional
+
+Wrap the configuration module in an IIFE or your own wrapper.
+
+```js
+gulpNgConfig('myApp.config', {
+  wrap: true
+})
+```
+
+Will produce an IIFE wrapper for your configuration module:
+```javascript
+(function () {
+  return angular.module('myApp.config')
+  .constant('..', '..');
+})();
+```
+
+You can provide a custom wrapper. Provide any string you want, just make sure to include `<%= module %>` for where you want to embed the angular module.
+```js
+gulpNgConfig('myApp.config', {
+  wrap: 'define(["angular"], function () {\n return <%= module %> \n});'
+});
+```
+
+The reuslting file will contain:
+```js
+define(["angular"], function () {
+ return angular.module('myApp.config')
+.constant('..', '..');
+});
 ```

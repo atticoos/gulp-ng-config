@@ -48,14 +48,15 @@ angular.module('myApp.config', [])
 
 ## Configuration
 Currently there are two configurable options for this plugin:
-```
-{
+```javascript
+gulpNgConfig('moduleName', {
   constants: object,
   createModule: boolean
-}
+});
 ```
 
-### constants
+### options.constants
+Type: `Object` Optional
 
 You can also override properties from your json file or add more by including them in the gulp tasks:
 ```javascript
@@ -81,7 +82,9 @@ angular.module('myApp.config', [])
 
 ```
 
-### createModule
+### options.createModule
+Type: `Boolean` Default value: `true` Optional
+
 By default, a new module is created with the name supplied. You can access an existing module, rather than creating one, by setting `createModule` to false.
 ```javascript
 gulp.task('test', function () {

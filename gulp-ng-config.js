@@ -10,7 +10,7 @@ const PLUGIN_NAME = 'gulp-ng-config';
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
   defaults = {
-    createModule: false
+    createModule: true
   };
 
   if (!moduleName) {

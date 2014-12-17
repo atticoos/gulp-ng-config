@@ -49,7 +49,7 @@ describe('gulp-ng-config', function () {
       expect(function () {
         stream.write(file);
       }).to.not.throw(Error);
-        expect(spy).to.have.been.called.twice();
+      expect(spy).to.have.been.called.twice();
 
       stream = plugin('asdf');
       spy = chai.spy();
@@ -61,7 +61,7 @@ describe('gulp-ng-config', function () {
       expect(function () {
         stream.write(file);
       }).to.not.throw(Error);
-        expect(spy).to.have.been.called.twice();
+      expect(spy).to.have.been.called.twice();
     });
 
     it ('should emit an error on malformed JSON', function () {

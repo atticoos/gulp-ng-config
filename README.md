@@ -61,15 +61,11 @@ Type: `Object` Optional
 
 You can also override properties from your json file or add more by including them in the gulp tasks:
 ```javascript
-gulp.task('test', function () {
-  gulp.src('configFile.json')
-  .pipe(gulpNgConfig('myApp.config', {
-    constants: {
-      string: 'overridden',
-      random: 'value'
-    }
-  }))
-  .pipe(gulp.dest('.'))
+gulpNgConfig('myApp.config', {
+  constants: {
+    string: 'overridden',
+    random: 'value'
+  }
 });
 ```
 Generating `configFile.js`
@@ -88,12 +84,8 @@ Type: `Boolean` Default value: `true` Optional
 
 By default, a new module is created with the name supplied. You can access an existing module, rather than creating one, by setting `createModule` to false.
 ```javascript
-gulp.task('test', function () {
-  gulp.src('configFile.json')
-  .pipe(gulpNgConfig('myApp.config', {
-    createModule: false
-  }))
-  .pipe(gulp.dest('.'))
+gulpNgConfig('myApp.config', {
+  createModule: false
 });
 ```
 
@@ -117,7 +109,7 @@ gulpNgConfig('myApp.config', {
 Will produce an IIFE wrapper for your configuration module:
 ```javascript
 (function () {
-  return angular.module('myApp.config')
+  return angular.module('myApp.config') // [] has been removed
   .constant('..', '..');
 })();
 ```

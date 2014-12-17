@@ -104,8 +104,10 @@ describe('gulp-ng-config', function () {
       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_3.js'));
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       .pipe(plugin('gulp-ng-config', {
-        one: {
-          two: 'four'
+        constants: {
+          one: {
+            two: 'four'
+          }
         }
       }))
       .pipe(through.obj(function (file) {
@@ -117,9 +119,22 @@ describe('gulp-ng-config', function () {
       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_4.js'));
       gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       .pipe(plugin('gulp-ng-config', {
-        one: {
-          three: 'four'
+        constants: {
+          one: {
+            three: 'four'
+          }
         }
+      }))
+      .pipe(through.obj(function (file) {
+        expect(file.contents.toString()).to.equal(expectedOutput.toString());
+        done();
+      }));
+    });
+    it ('should generate the angular template without declaring a new module', function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_5.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+      .pipe(plugin('gulp-ng-config', {
+        createModule: false
       }))
       .pipe(through.obj(function (file) {
         expect(file.contents.toString()).to.equal(expectedOutput.toString());

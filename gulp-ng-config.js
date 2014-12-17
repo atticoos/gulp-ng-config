@@ -7,15 +7,19 @@ var through = require('through2'),
 
 const PLUGIN_NAME = 'gulp-ng-config';
 
-function gulpNgConfig (moduleName, overridableProperties) {
-  var templateFile, stream;
+function gulpNgConfig (moduleName, configuration) {
+  var templateFile, stream, defaults;
+  defaults = {
+    createModule: true
+  };
 
   if (!moduleName) {
     throw new PluginError(PLUGIN_NAME, 'Missing required moduleName option for gulp-ng-config');
   }
 
   templateFile = fs.readFileSync(templateFilePath, 'utf8');
-  overridableProperties = overridableProperties || {};
+  configuration = configuration || {};
+  configuration = _.merge({}, defaults, configuration);
 
   stream = through.obj(function (file, encoding, callback) {
     var constants = [],
@@ -32,7 +36,7 @@ function gulpNgConfig (moduleName, overridableProperties) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
     }
 
-    jsonObj = _.merge(jsonObj, overridableProperties);
+    jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
     _.each(jsonObj, function (value, key) {
       constants.push({
@@ -41,7 +45,11 @@ function gulpNgConfig (moduleName, overridableProperties) {
       });
     });
 
-    templateOutput = _.template(templateFile, {moduleName: moduleName, constants: constants});
+    templateOutput = _.template(templateFile, {
+      createModule: configuration.createModule,
+      moduleName: moduleName,
+      constants: constants
+    });
     file.path = gutil.replaceExtension(file.path, '.js');
     file.contents = new Buffer(templateOutput);
     this.push(file);

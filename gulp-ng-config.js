@@ -48,7 +48,7 @@ function gulpNgConfig (moduleName, configuration) {
       });
     });
 
-    templateOutput = _.template(templateFile, {
+    templateOutput = _.template(templateFile)({
       createModule: configuration.createModule,
       moduleName: moduleName,
       constants: constants
@@ -60,7 +60,7 @@ function gulpNgConfig (moduleName, configuration) {
       } else {
         wrapTemplate = WRAP_TEAMPLTE;
       }
-      templateOutput = _.template(wrapTemplate, {
+      templateOutput = _.template(wrapTemplate)({
         module: templateOutput
       });
     }

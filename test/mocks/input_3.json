@@ -1,0 +1,12 @@
+{
+  "environmentA": {
+    "one": {
+      "two": "three"
+    }
+  },
+  "environmentB": {
+    "four": {
+      "five": "six"
+    }
+  }
+}

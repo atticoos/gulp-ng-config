@@ -12,7 +12,8 @@ function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
   defaults = {
     createModule: true,
-    wrap: false
+    wrap: false,
+    environment: null
   };
 
   if (!moduleName) {
@@ -40,6 +41,11 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
+
+    // select the environment in the configuration
+    if (configuration.environment && jsonObj.hasOwnProperty(configuration.environment)) {
+      jsonObj = jsonObj[configuration.environment];
+    }
 
     _.each(jsonObj, function (value, key) {
       constants.push({

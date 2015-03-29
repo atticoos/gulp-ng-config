@@ -54,10 +54,44 @@ angular.module('myApp', ['myApp.config']).run(function (string) {
 
 ## Configuration
 Currently there are a few configurable options to control the output of your configuration file:
+- [options.environment](#options.environment)
 - [options.constants](#options.constants)
 - [options.createModule](#options.createModule)
 - [options.wrap](#options.wrap)
 
+### <a id="options.environment"></a>options.environment
+Type: `String` Optional
+
+If your configuration contains multiple environments, you can supply the key you want the plugin to load from your configuration file.
+
+Example `config.json` file with multiple environments:
+```json
+{
+  "local": {
+    "EnvironmentConfig": {
+      "api": "http://localhost/"
+    }
+  },
+  "production": {
+    "EnvironmentConfig": {
+      "api": "https://api.production.com/"
+    }
+  }
+}
+```
+
+Usage of the plugin:
+```js
+gulpNgConfig('myApp.config', {
+  environment: 'production'
+})
+```
+
+Expected output:
+```js
+angular.module('myApp.config', [])
+.contant('EnvironmentConfig', {"api": "https://api.production.com/"});
+```
 
 ### <a id="options.constants"></a>options.constants
 Type: `Object` Optional

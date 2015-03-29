@@ -12,7 +12,8 @@ function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
   defaults = {
     createModule: true,
-    wrap: false
+    wrap: false,
+    environment: null
   };
 
   if (!moduleName) {
@@ -41,6 +42,11 @@ function gulpNgConfig (moduleName, configuration) {
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
+    // select the environment in the configuration
+    if (configuration.environment && jsonObj.hasOwnProperty(configuration.environment)) {
+      jsonObj = jsonObj[configuration.environment];
+    }
+
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
@@ -48,7 +54,7 @@ function gulpNgConfig (moduleName, configuration) {
       });
     });
 
-    templateOutput = _.template(templateFile, {
+    templateOutput = _.template(templateFile)({
       createModule: configuration.createModule,
       moduleName: moduleName,
       constants: constants
@@ -60,7 +66,7 @@ function gulpNgConfig (moduleName, configuration) {
       } else {
         wrapTemplate = WRAP_TEAMPLTE;
       }
-      templateOutput = _.template(wrapTemplate, {
+      templateOutput = _.template(wrapTemplate)({
         module: templateOutput
       });
     }

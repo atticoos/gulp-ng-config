@@ -170,7 +170,7 @@ define(["angular"], function () {
 ### <a id="options.parser"></a>options.parser
 Type: `String` Default value: 'json' Optional
 
-By default, json file is used to generate the module. You can provide yml file to generate the module. Just set `parser` to `"yml"`. If your file type is yml and you have not defined `parser`, your file will still be parsed and js be generated correctly.
+By default, json file is used to generate the module. You can provide yml file to generate the module. Just set `parser` to `'yml'` or `'yaml'`. If your file type is yml and you have not defined `parser`, your file will still be parsed and js be generated correctly.
 For example, you have a `config.yml` file,
 ```yml
 string: my string
@@ -184,7 +184,7 @@ object:
 ```javascript
 gulp.src("config.yml")
 gulpNgConfig('myApp.config', {
-  parser: "yml"
+  parser: 'yml'
 });
 ```
 

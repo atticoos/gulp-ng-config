@@ -2,6 +2,7 @@ var through = require('through2'),
     gutil = require('gulp-util'),
     _ = require('lodash'),
     fs = require('fs'),
+    jsYaml = require('js-yaml'),
     templateFilePath = __dirname + '/template.html',
     PluginError = gutil.PluginError;
 
@@ -13,7 +14,8 @@ function gulpNgConfig (moduleName, configuration) {
   defaults = {
     createModule: true,
     wrap: false,
-    environment: null
+    environment: null,
+    configType: 'json'
   };
 
   if (!moduleName) {
@@ -30,10 +32,18 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate;
 
-    try {
-      jsonObj = JSON.parse(file.contents.toString('utf8'));
-    } catch (e) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+    if (configuration.configType === 'json') {
+      try {
+        jsonObj = file.isNull() ? {} : JSON.parse(file.contents.toString('utf8'));
+      } catch (e) {
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+      }
+    } else if (configuration.configType === 'yml') {
+      try {
+        jsonObj = jsYaml.safeLoad(file.contents);
+      } catch (e) {
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+      }
     }
 
     if (!_.isPlainObject(jsonObj)) {

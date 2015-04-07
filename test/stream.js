@@ -135,6 +135,19 @@ describe('gulp-ng-config', function () {
         }));
       });
     });
+    describe('yaml', function () {
+      it ('should generate the angular template with object properties', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_2.js'));
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.yaml'))
+        .pipe(plugin('gulp-ng-config', {
+          parser: 'yaml'
+        }))
+        .pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+    });
   });
   describe('plugin options', function () {
     it ('should generate the angular template with overridable properties', function (done) {

@@ -32,7 +32,7 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate;
 
-    if (_.endsWith(file.path, 'yml')) {
+    if (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml')) {
       configuration.parser = 'yml';
     }
 
@@ -46,8 +46,10 @@ function gulpNgConfig (moduleName, configuration) {
       try {
         jsonObj = jsYaml.safeLoad(file.contents);
       } catch (e) {
-        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild YML file provided'));
       }
+    } else {
+      this.emit('error', new PluginError(PLUGIN_NAME, configuration.parser + ' is not supported as a valid parser'));
     }
 
     if (!_.isPlainObject(jsonObj)) {

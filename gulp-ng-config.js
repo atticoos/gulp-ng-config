@@ -42,7 +42,7 @@ function gulpNgConfig (moduleName, configuration) {
       } catch (e) {
         this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
       }
-    } else if (configuration.parser === 'yml') {
+    } else if (configuration.parser === 'yml' || configuration.parser === 'yaml') {
       try {
         jsonObj = jsYaml.safeLoad(file.contents);
       } catch (e) {

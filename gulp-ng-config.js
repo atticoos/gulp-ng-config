@@ -15,7 +15,7 @@ function gulpNgConfig (moduleName, configuration) {
     createModule: true,
     wrap: false,
     environment: null,
-    parser: 'json'
+    parser: null
   };
 
   if (!moduleName) {
@@ -32,8 +32,12 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate;
 
-    if (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml')) {
+    if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
       configuration.parser = 'yml';
+    }
+
+    if (!configuration.parser) {
+      configuration.parser = 'json';
     }
 
     if (configuration.parser === 'json') {

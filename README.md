@@ -58,7 +58,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.constants](#options.constants)
 - [options.createModule](#options.createModule)
 - [options.wrap](#options.wrap)
-- [options.configType](#options.configType)
+- [options.parser](#options.parser)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -167,10 +167,10 @@ define(["angular"], function () {
 });
 ```
 
-### <a id="options.configType"></a>options.configType
+### <a id="options.parser"></a>options.parser
 Type: `String` Default value: 'json' Optional
 
-By default, json file is used to generate the module. You can provide yml file to generate the module. Just set `configType` to `"yml"`.
+By default, json file is used to generate the module. You can provide yml file to generate the module. Just set `parser` to `"yml"`. If your file type is yml and you have not defined `parser`, your file will still be parsed and js be generated correctly.
 For example, you have a `config.yml` file,
 ```yml
 string: my string
@@ -184,7 +184,7 @@ object:
 ```javascript
 gulp.src("config.yml")
 gulpNgConfig('myApp.config', {
-  configType: "yml"
+  parser: "yml"
 });
 ```
 

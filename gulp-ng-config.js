@@ -15,7 +15,7 @@ function gulpNgConfig (moduleName, configuration) {
     createModule: true,
     wrap: false,
     environment: null,
-    configType: 'json'
+    parser: 'json'
   };
 
   if (!moduleName) {
@@ -32,13 +32,17 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate;
 
-    if (configuration.configType === 'json') {
+    if (_.endsWith(file.path, 'yml')) {
+      configuration.parser = 'yml';
+    }
+
+    if (configuration.parser === 'json') {
       try {
         jsonObj = file.isNull() ? {} : JSON.parse(file.contents.toString('utf8'));
       } catch (e) {
         this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
       }
-    } else if (configuration.configType === 'yml') {
+    } else if (configuration.parser === 'yml') {
       try {
         jsonObj = jsYaml.safeLoad(file.contents);
       } catch (e) {

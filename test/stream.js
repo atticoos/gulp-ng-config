@@ -107,7 +107,7 @@ describe('gulp-ng-config', function () {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_1.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_1.yml'))
         .pipe(plugin('gulp-ng-config', {
-          configType: 'yml'
+          parser: 'yml'
         }))
         .pipe(through.obj(function (file) {
           expect(file.contents.toString()).to.equal(expectedOutput.toString());
@@ -118,8 +118,17 @@ describe('gulp-ng-config', function () {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_2.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_2.yml'))
         .pipe(plugin('gulp-ng-config', {
-          configType: 'yml'
+          parser: 'yml'
         }))
+        .pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+      it ('should generate the angular template with object properties with no parser', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_2.js'));
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.yml'))
+        .pipe(plugin('gulp-ng-config'))
         .pipe(through.obj(function (file) {
           expect(file.contents.toString()).to.equal(expectedOutput.toString());
           done();

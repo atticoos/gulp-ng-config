@@ -2,6 +2,7 @@ var through = require('through2'),
     gutil = require('gulp-util'),
     _ = require('lodash'),
     fs = require('fs'),
+    jsYaml = require('js-yaml'),
     templateFilePath = __dirname + '/template.html',
     PluginError = gutil.PluginError;
 
@@ -13,7 +14,8 @@ function gulpNgConfig (moduleName, configuration) {
   defaults = {
     createModule: true,
     wrap: false,
-    environment: null
+    environment: null,
+    parser: null
   };
 
   if (!moduleName) {
@@ -30,10 +32,28 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate;
 
-    try {
-      jsonObj = JSON.parse(file.contents.toString('utf8'));
-    } catch (e) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+    if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
+      configuration.parser = 'yml';
+    }
+
+    if (!configuration.parser) {
+      configuration.parser = 'json';
+    }
+
+    if (configuration.parser === 'json') {
+      try {
+        jsonObj = file.isNull() ? {} : JSON.parse(file.contents.toString('utf8'));
+      } catch (e) {
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+      }
+    } else if (configuration.parser === 'yml' || configuration.parser === 'yaml') {
+      try {
+        jsonObj = jsYaml.safeLoad(file.contents);
+      } catch (e) {
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild YML file provided'));
+      }
+    } else {
+      this.emit('error', new PluginError(PLUGIN_NAME, configuration.parser + ' is not supported as a valid parser'));
     }
 
     if (!_.isPlainObject(jsonObj)) {

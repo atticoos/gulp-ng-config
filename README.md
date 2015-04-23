@@ -58,6 +58,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.constants](#options.constants)
 - [options.createModule](#options.createModule)
 - [options.wrap](#options.wrap)
+- [options.parser](#options.parser)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -165,5 +166,35 @@ define(["angular"], function () {
 .constant('..', '..');
 });
 ```
+
+### <a id="options.parser"></a>options.parser
+Type: `String` Default value: 'json' Optional
+
+By default, json file is used to generate the module. You can provide yml file to generate the module. Just set `parser` to `'yml'` or `'yaml'`. If your file type is yml and you have not defined `parser`, your file will still be parsed and js be generated correctly.
+For example, you have a `config.yml` file,
+```yml
+string: my string
+integer: 12345
+object:
+  one: 2
+  three:
+    - four
+```
+
+```javascript
+gulp.src("config.yml")
+gulpNgConfig('myApp.config', {
+  parser: 'yml'
+});
+```
+
+Generating,
+```js
+angular.module('myApp.config', [])
+.constant('string', "my string")
+.constant('integer', 12345)
+.constant('object', {"one":2,"three":["four"]});
+```
+
 ## Contributing
 Contributions, issues, suggestions, and all other remarks are welcomed. To run locally just fork &amp; clone the project and run `npm install`. Before submitting a Pull Request, make sure that your changes pass `gulp test`, and if you are introducing or changing a feature, that you add/update any tests involved.

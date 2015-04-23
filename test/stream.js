@@ -203,5 +203,22 @@ describe('gulp-ng-config', function () {
         done();
       }));
     });
+
+    it('should merge environment keys with constant keys', function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_11.js')),
+          streamA = gulp.src(path.normalize(__dirname + '/mocks/input_3.json'));
+
+      streamA
+        .pipe(plugin('gulp-ng-config', {
+          environment: 'environmentA',
+          constants: {
+            constant: 'value'
+          }
+        }))
+        .pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+    });
   });
 });

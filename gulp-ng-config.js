@@ -40,12 +40,12 @@ function gulpNgConfig (moduleName, configuration) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
     }
 
-    jsonObj = _.merge({}, jsonObj, configuration.constants || {});
-
     // select the environment in the configuration
     if (configuration.environment && jsonObj.hasOwnProperty(configuration.environment)) {
       jsonObj = jsonObj[configuration.environment];
     }
+
+    jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
     _.each(jsonObj, function (value, key) {
       constants.push({

@@ -7,7 +7,7 @@ var through = require('through2'),
     PluginError = gutil.PluginError;
 
 const PLUGIN_NAME = 'gulp-ng-config',
-      WRAP_TEAMPLTE = '(function () { \n return <%= module %>\n})();\n';
+      WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
@@ -84,7 +84,7 @@ function gulpNgConfig (moduleName, configuration) {
       if (typeof configuration.wrap === 'string') {
         wrapTemplate = configuration.wrap;
       } else {
-        wrapTemplate = WRAP_TEAMPLTE;
+        wrapTemplate = WRAP_TEMPLATE;
       }
       templateOutput = _.template(wrapTemplate)({
         module: templateOutput

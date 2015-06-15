@@ -268,5 +268,17 @@ describe('gulp-ng-config', function () {
           done();
         }));
     });
+    it ('should generate pretty-looked content', function (done) {
+      //TODO i didn't know how to check line-breaks correctly
+      // var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_12.js'));
+      //gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+      //    .pipe(plugin('gulp-ng-config', {
+      //      pretty: true
+      //    }))
+      //    .pipe(through.obj(function (file) {
+      //      expect(file.contents.toString()).to.equal(expectedOutput.toString());
+      //      done();
+      //    }));
+    });
   });
 });

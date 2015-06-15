@@ -15,7 +15,8 @@ function gulpNgConfig (moduleName, configuration) {
     createModule: true,
     wrap: false,
     environment: null,
-    parser: null
+    parser: null,
+    pretty: false
   };
 
   if (!moduleName) {
@@ -67,10 +68,12 @@ function gulpNgConfig (moduleName, configuration) {
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
+    var spaces = (configuration.pretty) ?  2 : 0;
+
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
-        value: JSON.stringify(value)
+        value: JSON.stringify(value, null, spaces)
       });
     });
 

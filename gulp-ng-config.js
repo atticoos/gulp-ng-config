@@ -68,7 +68,15 @@ function gulpNgConfig (moduleName, configuration) {
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
-    var spaces = (configuration.pretty) ?  2 : 0;
+    var spaces = 0;
+    if (configuration.pretty) {
+      if (configuration.pretty === true) {
+        spaces = 2;
+      } else if (configuration.pretty === +configuration.pretty) {
+        //if number passed
+        spaces = configuration.pretty;
+      }
+    }
 
     _.each(jsonObj, function (value, key) {
       constants.push({

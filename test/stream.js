@@ -268,12 +268,45 @@ describe('gulp-ng-config', function () {
           done();
         }));
     });
-    it ('should generate pretty-looked content', function (done) {
-      //TODO i didn't know how to check line-breaks correctly
-      // var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_12.js'));
+    it ('should generate pretty-looked content with default spaces', function (done) {
+       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_12.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            pretty: true
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+    });
+    it ('should generate common-looked content with pretty set to false', function (done) {
+       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_14.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            pretty: false
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+    });
+    it ('should generate pretty-looked content with number of spaces', function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_13.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            pretty: 4
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+    });
+    it ('should generate an error when unacceptable value passed as pretty param', function (done) {
+      //TODO should handle an error
+      //var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_13.js'));
       //gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
       //    .pipe(plugin('gulp-ng-config', {
-      //      pretty: true
+      //      pretty: 4.1
       //    }))
       //    .pipe(through.obj(function (file) {
       //      expect(file.contents.toString()).to.equal(expectedOutput.toString());

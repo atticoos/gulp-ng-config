@@ -74,8 +74,8 @@ function gulpNgConfig (moduleName, configuration) {
         spaces = 2;
       } else if (configuration.pretty === +configuration.pretty) {
 
-        if (!Number.isInteger(configuration.pretty) || !Number.isFinite(configuration.pretty))  {
-          return this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'pretty\' value. Should be boolean or integer number'));
+        if (!(configuration.pretty === parseInt(configuration.pretty, 10)) || !Number.isFinite(configuration.pretty))  {
+          return this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'pretty\' value. Should be boolean value or an integer number'));
         }
 
         spaces = configuration.pretty;

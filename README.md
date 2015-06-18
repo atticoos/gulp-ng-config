@@ -91,7 +91,7 @@ gulpNgConfig('myApp.config', {
 Expected output:
 ```js
 angular.module('myApp.config', [])
-.contant('EnvironmentConfig', {"api": "https://api.production.com/"});
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
 
 ### <a id="options.constants"></a>options.constants

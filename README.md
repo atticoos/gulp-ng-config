@@ -196,5 +196,25 @@ angular.module('myApp.config', [])
 .constant('object', {"one":2,"three":["four"]});
 ```
 
+## Additional Usages
+
+### Without a json/yaml file on disk
+Use `buffer-to-vinyl` to create and stream a vinyl file into `gulp-ng-config`. Now config values can come from environment variables, command-line arguments or anywhere else.
+
+```js
+var b2v = require('buffer-to-vinyl');
+var gulpNgConfig = require('gulp-ng-config');
+
+gulp.task('make-config', function() {
+  var json = JSON.stringify({
+    // your config here
+  });
+
+  return b2v.stream(new Buffer(json), 'config.js')
+    .pipe(gulpNgConfig('myApp.config'))
+    .pipe(gulp.dest('build'));
+});
+```
+
 ## Contributing
 Contributions, issues, suggestions, and all other remarks are welcomed. To run locally just fork &amp; clone the project and run `npm install`. Before submitting a Pull Request, make sure that your changes pass `gulp test`, and if you are introducing or changing a feature, that you add/update any tests involved.

@@ -1,4 +1,4 @@
-angular.module('gulp-ng-config', [])
-.constant('one', {
+angular.module("gulp-ng-config", [])
+.constant("one", {
     "two": "three"
 });

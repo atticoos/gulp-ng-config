@@ -59,7 +59,6 @@ Currently there are a few configurable options to control the output of your con
 - [options.createModule](#options.createModule)
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
-- [options.pretty](#options.pretty)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -195,42 +194,6 @@ angular.module('myApp.config', [])
 .constant('string', "my string")
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]});
-```
-
-### <a id="options.pretty"></a>options.pretty
-Type: `Boolean` or `Number` Default value: 'false' Optional
-
-By default, each constant in output js file will contain a value written as a single line.
-
-```js
-.constant('object', {"one":1,"two":2});
-```
-
-if `pretty` option set to `true`,
- 
-```js
-gulpNgConfig('myApp.config', {
-  pretty: true
-})
-```
-
-Constant will be formatted with `2` spaces:
- 
-```js
-.constant('object', 
-  {
-    "one": 1,
-    "two": 2
-  }
-);
-```
-
-You may set custom spaces count, by passing `number` instead of `true`
-
-```js
-gulpNgConfig('myApp.config', {
-  pretty: 4
-})
 ```
 
 ## Contributing

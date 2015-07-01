@@ -91,7 +91,7 @@ gulpNgConfig('myApp.config', {
 Expected output:
 ```js
 angular.module('myApp.config', [])
-.contant('EnvironmentConfig', {"api": "https://api.production.com/"});
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
 
 ### <a id="options.constants"></a>options.constants
@@ -194,6 +194,26 @@ angular.module('myApp.config', [])
 .constant('string', "my string")
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]});
+```
+
+## Additional Usages
+
+### Without a json/yaml file on disk
+Use `buffer-to-vinyl` to create and stream a vinyl file into `gulp-ng-config`. Now config values can come from environment variables, command-line arguments or anywhere else.
+
+```js
+var b2v = require('buffer-to-vinyl');
+var gulpNgConfig = require('gulp-ng-config');
+
+gulp.task('make-config', function() {
+  var json = JSON.stringify({
+    // your config here
+  });
+
+  return b2v.stream(new Buffer(json), 'config.js')
+    .pipe(gulpNgConfig('myApp.config'))
+    .pipe(gulp.dest('build'));
+});
 ```
 
 ## Contributing

@@ -183,9 +183,9 @@ object:
 
 ```javascript
 gulp.src("config.yml")
-gulpNgConfig('myApp.config', {
+.pipe(gulpNgConfig('myApp.config', {
   parser: 'yml'
-});
+}));
 ```
 
 Generating,

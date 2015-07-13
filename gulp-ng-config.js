@@ -15,7 +15,8 @@ function gulpNgConfig (moduleName, configuration) {
     createModule: true,
     wrap: false,
     environment: null,
-    parser: null
+    parser: null,
+    pretty: false
   };
 
   if (!moduleName) {
@@ -67,10 +68,24 @@ function gulpNgConfig (moduleName, configuration) {
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
+    var spaces = 0;
+    if (configuration.pretty) {
+      if (configuration.pretty === true) {
+        spaces = 2;
+      } else if (configuration.pretty === +configuration.pretty) {
+        if (configuration.pretty !== parseInt(configuration.pretty, 10) || !Number.isFinite(configuration.pretty))  {
+          var message = 'invalid \'pretty\' value. Should be boolean value or an integer number';
+          return this.emit('error', new PluginError(PLUGIN_NAME, message));
+        }
+
+        spaces = configuration.pretty;
+      }
+    }
+
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
-        value: JSON.stringify(value)
+        value: JSON.stringify(value, null, spaces)
       });
     });
 

@@ -20,6 +20,9 @@ It's pretty simple:
 ## Example Usage
 We start with our task. Our source file is a JSON file containing our configuration. We will pipe this through `gulpNgConfig` and out will come an angular module of constants.
 ```javascript
+var gulp = require('gulp');
+var gulpNgConfig = require('gulp-ng-config');
+
 gulp.task('test', function () {
   gulp.src('configFile.json')
   .pipe(gulpNgConfig('myApp.config'))

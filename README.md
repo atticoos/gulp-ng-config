@@ -10,7 +10,7 @@ It's often useful to generate a file of constants, usually as environment variab
 This Gulp plugin will allow you to provide an object of properties and will generate an Angular module of constants.
 
 ## To Install:
-`npm install gulp-ng-config`
+`npm install gulp-ng-config --save`
 
 ## How it works
 It's pretty simple:

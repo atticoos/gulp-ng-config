@@ -62,8 +62,12 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     // select the environment in the configuration
-    if (configuration.environment && jsonObj.hasOwnProperty(configuration.environment)) {
-      jsonObj = jsonObj[configuration.environment];
+    if (configuration.environment) {
+      if (jsonObj.hasOwnProperty(configuration.environment)) {
+        jsonObj = jsonObj[configuration.environment];
+      } else {
+        return this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'environment\' value'));
+      }
     }
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});

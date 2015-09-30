@@ -242,6 +242,24 @@ describe('gulp-ng-config', function () {
           }));
     });
 
+    it('should emit an error if an environment key is supplied and the key does not exist', function (done) {
+      var stream = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
+          spy = chai.spy();
+      expect(function () {
+        stream.pipe(plugin('gulp-ng-config', {
+          environment: 'env'
+        })).on('error', function () {
+          spy();
+          this.emit('end');
+        }).on('end', function () {
+          expect(spy).to.have.been.called();
+          done();
+        }).pipe(through.obj(function () {
+          done();
+        }));
+      }).to.not.throw();
+    });
+
     it('should merge environment keys with constant keys', function (done) {
       var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_11.js')),
           streamA = gulp.src(path.normalize(__dirname + '/mocks/input_3.json'));

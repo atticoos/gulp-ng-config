@@ -1,0 +1,15 @@
+{
+  "version": "0.0.x",
+  "env": {
+    "environmentA": {
+      "one": {
+        "two": "three"
+      }
+    },
+    "environmentB": {
+      "four": {
+        "five": "six"
+      }
+    }
+  }
+}

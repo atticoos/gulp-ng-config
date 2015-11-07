@@ -1,6 +1,19 @@
+sudo: false
+
 language: node_js
 node_js:
 - '0.10'
+- '0.11'
+- '0.12'
+- '4.0'
+- '4.1'
+- '4.2'
+- iojs
+
+cache:
+  directories:
+    - node_modules
+
 notifications:
   slack:
-    secure: gM8VXZbXkSyQ1jZkUphhqkzwO2OJxF0UJBz1hSkn9nLg9Dz3uiXMBCpgzhLkyY2nGl5VXEANum+kmtbjdERoQEW+Kb8/P9yu0FOe8D+nN8oAm/KuIjR/WvP8T2AxQOBpB74lgDjaqEMboHxTqgygb75DtuBg6p2nFDB+MKz8mI8=
+    secure: AcgM4v8ZbWRW0jTGE+1L5HMSkW6D+f69JdoO+duCTHIzkIXtH2MHbO2tLczFUPVoSq7u+VL8+9gV+HHp4nn7IK12GTEYsd6SfCNZBSGLw3kK7tuupsdMAg0tIl+3zyhyQSwGG3sr/ZXQ7Tce8qDKSJ37YzT3R6EZSqSaACdE708=

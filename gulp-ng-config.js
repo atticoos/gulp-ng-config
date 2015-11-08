@@ -6,10 +6,9 @@ var through = require('through2'),
     fs = require('fs'),
     jsYaml = require('js-yaml'),
     templateFilePath = __dirname + '/template.html',
-    PluginError = gutil.PluginError;
-
-const PLUGIN_NAME = 'gulp-ng-config',
-      WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n';
+    PluginError = gutil.PluginError,
+    PLUGIN_NAME = 'gulp-ng-config',
+    WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;

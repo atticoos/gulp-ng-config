@@ -14,7 +14,8 @@ gulp.task('lint', function () {
 gulp.task('style', function () {
   return gulp.src(['gulp-ng-config.js', 'test/stream.js'])
   .pipe(jscs())
-  .pipe(jscs.reporter('console'));
+  .pipe(jscs.reporter('console'))
+  .pipe(jscs.reporter('fail'));
 });
 
 gulp.task('unittest', function () {

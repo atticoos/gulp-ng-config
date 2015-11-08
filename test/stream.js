@@ -1,3 +1,5 @@
+'use strict';
+
 describe('gulp-ng-config', function () {
   var expect,
       should,
@@ -24,52 +26,39 @@ describe('gulp-ng-config', function () {
       }).to.throw(Error);
     });
 
-    it('should only accept files in JSON format', function () {
-      var file, stream, spy;
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-
-      file = new File({
-        path: 'mock/path.json',
-        contents: es.readArray(['one', 'two'])
+    it ('should only accept files in JSON format', function () {
+      var mockFiles = [
+        new File({
+          path: 'mock/path.json',
+          contents: es.readArray(['one', 'two'])
+        }),
+        new File({
+          path: 'mock/path.json',
+          contents: new Buffer('a string')
+        }),
+        new File({
+          path: 'mock/path.json',
+          contents: new Buffer(123)
+        })
+      ];
+      mockFiles.forEach(function (file) {
+        var stream = plugin('outputConfigurationName');
+        stream.on('error', function (error) {
+          expect(error.message).to.be.eql('invalid JSON file provided');
+        });
+        expect(function () {
+          stream.write(file);
+        }).not.to.throw();
       });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
-
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-      file = new File({
-        path: 'mock/path.json',
-        contents: new Buffer('a string')
-      });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
-
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-      file = new File({
-        path: 'mock/path.json',
-        contents: new Buffer(123)
-      });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
     });
 
     it('should emit an error on malformed JSON', function () {
-      var file, stream, spy;
+      var file,
+          stream;
       stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-
+      stream.on('error', function (error) {
+        expect(error.message).to.be.equal('invalid JSON file provided');
+      });
       file = new File({
         path: 'mock/path.json',
         contents: new Buffer('{a:b}')
@@ -77,7 +66,20 @@ describe('gulp-ng-config', function () {
       expect(function () {
         stream.write(file);
       }).to.not.throw();
-      expect(spy).to.have.been.called();
+    });
+    it ('should emit an error when supplying an invalid parser', function () {
+      var file,
+          stream;
+
+      stream = plugin('asdf', {
+        parser: 'invalidParser'
+      });
+      stream.on('error', function (error) {
+        expect(error.message).to.be.eql('invalidParser' + ' is not supported as a valid parser');
+      });
+      expect(function () {
+        stream.write(file);
+      }).not.to.throw();
     });
   });
 
@@ -254,21 +256,14 @@ describe('gulp-ng-config', function () {
     });
 
     it('should emit an error if an environment key is supplied and the key does not exist', function (done) {
-      var stream = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
-          spy = chai.spy();
-      expect(function () {
-        stream.pipe(plugin('gulp-ng-config', {
-          environment: 'env'
-        })).on('error', function () {
-          spy();
-          this.emit('end');
-        }).on('end', function () {
-          expect(spy).to.have.been.called();
-          done();
-        }).pipe(through.obj(function () {
-          done();
-        }));
-      }).to.not.throw();
+      var stream = gulp.src(path.normalize(__dirname + '/mocks/input_3.json'));
+
+      stream.pipe(plugin('gulp-ng-config', {
+        environment: 'nonExistingEnvironment'
+      })).on('error', function (error) {
+        expect(error.message).to.be.eql('invalid \'environment\' value');
+        done();
+      });
     });
 
     it('should merge environment keys with constant keys', function (done) {

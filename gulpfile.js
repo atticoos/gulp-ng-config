@@ -5,18 +5,21 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish');
 
 gulp.task('lint', function () {
-  gulp.src(['gulp-ng-config.js', 'test/stream.js'])
+  return gulp.src(['gulp-ng-config.js', 'test/stream.js'])
   .pipe(jshint('.jshintrc'))
-  .pipe(jshint.reporter('jshint-stylish'));
+  .pipe(jshint.reporter('jshint-stylish'))
+  .pipe(jshint.reporter('fail'))
 });
 
 gulp.task('style', function () {
-  gulp.src(['gulp-ng-config.js', 'test/stream.js'])
-  .pipe(jscs());
+  return gulp.src(['gulp-ng-config.js', 'test/stream.js'])
+  .pipe(jscs())
+  .pipe(jscs.reporter('console'))
+  .pipe(jscs.reporter('fail'));
 });
 
 gulp.task('unittest', function () {
-  gulp.src('test/stream.js')
+  return gulp.src('test/stream.js')
   .pipe(mocha({reporter: 'spec'}));
 });
 

@@ -38,6 +38,7 @@
     "chai-spies": "^0.7.1",
     "event-stream": "^3.3.0",
     "gulp": "^3.8.7",
+    "gulp-coveralls": "^0.1.4",
     "gulp-istanbul": "^0.10.2",
     "gulp-jscs": "^3.0.2",
     "gulp-jshint": "^1.8.4",

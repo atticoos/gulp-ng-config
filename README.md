@@ -4,8 +4,9 @@
 [![NPM version](http://img.shields.io/npm/v/gulp-ng-config.svg?style=flat)](https://npmjs.org/package/gulp-ng-config)
 [![NPM version](http://img.shields.io/npm/dm/gulp-ng-config.svg?style=flat)](https://npmjs.org/package/gulp-ng-config)
 [![Build Status](http://img.shields.io/travis/ajwhite/gulp-ng-config.svg?style=flat)](http://travis-ci.org/ajwhite/gulp-ng-config)
-[![Dependency Status](http://img.shields.io/gemnasium/ajwhite/gulp-ng-config.svg?style=flat)](https://gemnasium.com/ajwhite/gulp-ng-config)
+[![Coverage Status](https://coveralls.io/repos/ajwhite/gulp-ng-config/badge.svg?branch=develop&service=github)](https://coveralls.io/github/ajwhite/gulp-ng-config?branch=develop)
 [![Code Climate](https://codeclimate.com/github/ajwhite/gulp-ng-config/badges/gpa.svg)](https://codeclimate.com/github/ajwhite/gulp-ng-config)
+[![Dependency Status](http://img.shields.io/gemnasium/ajwhite/gulp-ng-config.svg?style=flat)](https://gemnasium.com/ajwhite/gulp-ng-config)
 
 It's often useful to generate a file of constants, usually as environment variables, for your Angular apps.
 This Gulp plugin will allow you to provide an object of properties and will generate an Angular module of constants.

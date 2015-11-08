@@ -2,7 +2,8 @@ var gulp = require('gulp'),
     mocha = require('gulp-mocha'),
     jscs = require('gulp-jscs'),
     jshint = require('gulp-jshint'),
-    stylish = require('jshint-stylish');
+    stylish = require('jshint-stylish'),
+    istanbul = require('gulp-istanbul');
 
 gulp.task('lint', function () {
   return gulp.src(['gulp-ng-config.js', 'test/stream.js'])
@@ -18,9 +19,16 @@ gulp.task('style', function () {
   .pipe(jscs.reporter('fail'));
 });
 
-gulp.task('unittest', function () {
+gulp.task('pre-test', function () {
+  return gulp.src('gulp-ng-config.js')
+  .pipe(istanbul())
+  .pipe(istanbul.hookRequire());
+})
+
+gulp.task('unittest', ['pre-test'], function () {
   return gulp.src('test/stream.js')
-  .pipe(mocha({reporter: 'spec'}));
+  .pipe(mocha({reporter: 'spec'}))
+  .pipe(istanbul.writeReports());
 });
 
 gulp.task('test', ['lint', 'style', 'unittest']);

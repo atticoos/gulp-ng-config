@@ -55,7 +55,7 @@ describe('gulp-ng-config', function () {
           stream;
       stream = plugin('asdf');
       stream.on('error', function (error) {
-        expect(error.message).to.be.equal('invalid JSON file provided')
+        expect(error.message).to.be.equal('invalid JSON file provided');
       });
       file = new File({
         path: 'mock/path.json',
@@ -63,7 +63,7 @@ describe('gulp-ng-config', function () {
       });
 
 
-      
+
       expect(function () {
         stream.write(file);
       }).to.not.throw();

@@ -67,6 +67,20 @@ describe('gulp-ng-config', function () {
         stream.write(file);
       }).to.not.throw();
     });
+    it ('should emit an error when supplying an invalid parser', function () {
+      var file,
+          stream;
+
+      stream = plugin('asdf', {
+        parser: 'invalidParser'
+      });
+      stream.on('error', function (error) {
+        expect(error.message).to.be.eql('invalidParser' + ' is not supported as a valid parser');
+      });
+      expect(function () {
+        stream.write(file);
+      }).not.to.throw();
+    });
   });
 
   describe('config generation', function () {

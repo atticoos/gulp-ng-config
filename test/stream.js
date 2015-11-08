@@ -61,9 +61,6 @@ describe('gulp-ng-config', function () {
         path: 'mock/path.json',
         contents: new Buffer('{a:b}')
       });
-
-
-
       expect(function () {
         stream.write(file);
       }).to.not.throw();

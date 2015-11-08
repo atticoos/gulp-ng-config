@@ -14,6 +14,8 @@ cache:
   directories:
     - node_modules
 
+after_script: 'gulp coveralls'
+
 notifications:
   slack:
     secure: AcgM4v8ZbWRW0jTGE+1L5HMSkW6D+f69JdoO+duCTHIzkIXtH2MHbO2tLczFUPVoSq7u+VL8+9gV+HHp4nn7IK12GTEYsd6SfCNZBSGLw3kK7tuupsdMAg0tIl+3zyhyQSwGG3sr/ZXQ7Tce8qDKSJ37YzT3R6EZSqSaACdE708=

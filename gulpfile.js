@@ -37,5 +37,5 @@ gulp.task('coveralls', function () {
   .pipe(coveralls());
 });
 
-gulp.task('test', ['lint', 'style', 'unittest', 'coveralls']);
+gulp.task('test', ['lint', 'style', 'unittest']);
 gulp.task('default', ['test']);

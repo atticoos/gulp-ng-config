@@ -3,7 +3,8 @@ var gulp = require('gulp'),
     jscs = require('gulp-jscs'),
     jshint = require('gulp-jshint'),
     stylish = require('jshint-stylish'),
-    istanbul = require('gulp-istanbul');
+    istanbul = require('gulp-istanbul'),
+    coveralls = require('gulp-coveralls');
 
 gulp.task('lint', function () {
   return gulp.src(['gulp-ng-config.js', 'test/stream.js'])
@@ -23,12 +24,17 @@ gulp.task('pre-test', function () {
   return gulp.src('gulp-ng-config.js')
   .pipe(istanbul())
   .pipe(istanbul.hookRequire());
-})
+});
 
 gulp.task('unittest', ['pre-test'], function () {
   return gulp.src('test/stream.js')
   .pipe(mocha({reporter: 'spec'}))
   .pipe(istanbul.writeReports());
+});
+
+gulp.task('coveralls', function () {
+  return gulp.src('coverage/lcov.info')
+  .pipe(coveralls());
 });
 
 gulp.task('test', ['lint', 'style', 'unittest']);

@@ -45,20 +45,24 @@ function gulpNgConfig (moduleName, configuration) {
       try {
         jsonObj = file.isNull() ? {} : JSON.parse(file.contents.toString('utf8'));
       } catch (e) {
-        this.emit('error', new PluginError(PLUGIN_NAME, 'invaild JSON file provided'));
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON file provided'));
+        return callback();
       }
     } else if (configuration.parser === 'yml' || configuration.parser === 'yaml') {
       try {
         jsonObj = jsYaml.safeLoad(file.contents);
       } catch (e) {
         this.emit('error', new PluginError(PLUGIN_NAME, 'invaild YML file provided'));
+        return callback();
       }
     } else {
       this.emit('error', new PluginError(PLUGIN_NAME, configuration.parser + ' is not supported as a valid parser'));
+      return callback();
     }
 
     if (!_.isPlainObject(jsonObj)) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
+      return callback();
     }
 
     // select the environment in the configuration
@@ -67,6 +71,7 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj = _.get(jsonObj, configuration.environment);
       } else {
         this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'environment\' value'));
+        return callback();
       }
     }
 

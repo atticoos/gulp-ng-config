@@ -24,52 +24,39 @@ describe('gulp-ng-config', function () {
       }).to.throw(Error);
     });
 
-    it('should only accept files in JSON format', function () {
-      var file, stream, spy;
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-
-      file = new File({
-        path: 'mock/path.json',
-        contents: es.readArray(['one', 'two'])
+    it ('should only accept files in JSON format', function () {
+      var mockFiles = [
+        new File({
+          path: 'mock/path.json',
+          contents: es.readArray(['one', 'two'])
+        }),
+        new File({
+          path: 'mock/path.json',
+          contents: new Buffer('a string')
+        }),
+        new File({
+          path: 'mock/path.json',
+          contents: new Buffer(123)
+        })
+      ];
+      mockFiles.forEach(function (file) {
+        var stream = plugin('outputConfigurationName');
+        stream.on('error', function (error) {
+          expect(error.message).to.be.eql('invalid JSON file provided');
+        });
+        expect(function () {
+          stream.write(file);
+        }).not.to.throw();
       });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
-
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-      file = new File({
-        path: 'mock/path.json',
-        contents: new Buffer('a string')
-      });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
-
-      stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-      file = new File({
-        path: 'mock/path.json',
-        contents: new Buffer(123)
-      });
-      expect(function () {
-        stream.write(file);
-      }).to.not.throw(Error);
-      expect(spy).to.have.been.called.twice();
     });
 
     it('should emit an error on malformed JSON', function () {
-      var file, stream, spy;
+      var file,
+          stream;
       stream = plugin('asdf');
-      spy = chai.spy();
-      stream.on('error', spy);
-
+      stream.on('error', function (error) {
+        expect(error.message).to.be.equal('invalid JSON file provided')
+      });
       file = new File({
         path: 'mock/path.json',
         contents: new Buffer('{a:b}')
@@ -77,7 +64,6 @@ describe('gulp-ng-config', function () {
       expect(function () {
         stream.write(file);
       }).to.not.throw();
-      expect(spy).to.have.been.called();
     });
   });
 

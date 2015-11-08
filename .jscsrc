@@ -91,7 +91,7 @@
   "maximumLineLength": 120,
   "requireCapitalizedConstructors": true,
   "disallowYodaConditions": true,
-  "validateJSDoc": {
+  "jsDoc": {
     "checkParamNames": true,
     "checkRedundantParams": true,
     "requireParamTypes": true

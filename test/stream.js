@@ -1,3 +1,5 @@
+'use strict';
+
 describe('gulp-ng-config', function () {
   var expect,
       should,

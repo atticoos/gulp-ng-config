@@ -1,3 +1,5 @@
+'use strict';
+
 var through = require('through2'),
     gutil = require('gulp-util'),
     _ = require('lodash'),

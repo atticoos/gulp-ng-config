@@ -97,6 +97,40 @@ angular.module('myApp.config', [])
 .constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
 
+#### Nested Environment
+If the configuration is nested it can be accessed by the namespace, for example
+```json
+{
+  "version": "0.1.0",
+  "env": {
+    "local": {
+      "EnvironmentConfig": {
+        "api": "http://localhost/"
+      }
+    },
+    "production": {
+      "EnvironmentConfig": {
+        "api": "https://api.production.com/"
+      }
+    }
+  }
+}
+```
+
+Usage of the plugin:
+```js
+gulpNgConfig('myApp.config', {
+  environment: 'env.production'
+})
+```
+
+Expected output:
+```js
+angular.module('myApp.config', [])
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
+```
+
+
 ### <a id="options.constants"></a>options.constants
 Type: `Object` Optional
 

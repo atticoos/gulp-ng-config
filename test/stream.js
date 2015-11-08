@@ -217,7 +217,6 @@ describe('gulp-ng-config', function () {
     it('should select an embedded json object if an environment key is supplied and the key exists', function (done) {
       var expectedOutputA = fs.readFileSync(path.normalize(__dirname + '/mocks/output_8.js')), // match envA
           expectedOutputB = fs.readFileSync(path.normalize(__dirname + '/mocks/output_9.js')), // match envB
-          expectedOutputC = fs.readFileSync(path.normalize(__dirname + '/mocks/output_10.js')), // no match
           expectedOutputD = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js')), // match envA
           streamA = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
           streamB = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
@@ -240,14 +239,6 @@ describe('gulp-ng-config', function () {
             expect(file.contents.toString()).to.equal(expectedOutputB.toString());
           }));
 
-      // tests output with no matching environment key
-      streamC.pipe(plugin('gulp-ng-config', {
-        environment: 'nonExistant'
-      }))
-          .pipe(through.obj(function (file) {
-            expect(file.contents.toString()).to.equal(expectedOutputC.toString());
-          }));
-
       // tests output with nested environment `env.environmentA`
       streamD
         .pipe(plugin('gulp-ng-config', {
@@ -257,10 +248,28 @@ describe('gulp-ng-config', function () {
           expect(file.contents.toString()).to.equal(expectedOutputD.toString());
         }));
 
-      es.merge(streamA, streamB, streamC, streamD)
+      es.merge(streamA, streamB, streamD)
           .pipe(through.obj(function () {
             done();
           }));
+    });
+
+    it('should emit an error if an environment key is supplied and the key does not exist', function (done) {
+      var stream = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
+          spy = chai.spy();
+      expect(function () {
+        stream.pipe(plugin('gulp-ng-config', {
+          environment: 'env'
+        })).on('error', function () {
+          spy();
+          this.emit('end');
+        }).on('end', function () {
+          expect(spy).to.have.been.called();
+          done();
+        }).pipe(through.obj(function () {
+          done();
+        }));
+      }).to.not.throw();
     });
 
     it('should merge environment keys with constant keys', function (done) {

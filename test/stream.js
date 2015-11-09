@@ -425,17 +425,5 @@ describe('gulp-ng-config', function () {
           });
       });
     });
-    //it ('should generate an error when unacceptable value passed as pretty param', function (done) {
-    //TODO should handle an error
-    //var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_13.js'));
-    //gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
-    //    .pipe(plugin('gulp-ng-config', {
-    //      pretty: 4.1
-    //    }))
-    //    .pipe(through.obj(function (file) {
-    //      expect(file.contents.toString()).to.equal(expectedOutput.toString());
-    //      done();
-    //    }));
-    //});
   });
 });

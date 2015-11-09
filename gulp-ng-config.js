@@ -34,7 +34,8 @@ function gulpNgConfig (moduleName, configuration) {
     var constants = [],
         templateOutput,
         jsonObj,
-        wrapTemplate;
+        wrapTemplate,
+        spaces;
 
     if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
       configuration.parser = 'yml';
@@ -64,7 +65,7 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     if (!_.isPlainObject(jsonObj)) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
+      this.emit('error', new PluginError(PLUGIN_NAME, 'configuration file contains invalid JSON'));
       return callback();
     }
 
@@ -85,18 +86,18 @@ function gulpNgConfig (moduleName, configuration) {
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
-    var spaces = 0;
-    if (configuration.pretty) {
-      if (configuration.pretty === true) {
-        spaces = 2;
-      } else if (configuration.pretty === +configuration.pretty) {
-        if (configuration.pretty !== parseInt(configuration.pretty, 10) || !Number.isFinite(configuration.pretty))  {
-          var message = 'invalid \'pretty\' value. Should be boolean value or an integer number';
-          return this.emit('error', new PluginError(PLUGIN_NAME, message));
-        }
-
-        spaces = configuration.pretty;
-      }
+    if (_.isUndefined(configuration.pretty) || configuration.pretty === false) {
+      spaces = 0;
+    } else if (configuration.pretty === true) {
+      spaces = 2;
+    } else if (!isNaN(configuration.pretty) && Number.isFinite(configuration.pretty)) {
+      spaces = parseInt(configuration.pretty);
+    } else {
+      this.emit('error', new PluginError(
+        PLUGIN_NAME,
+        'invalid \'pretty\' value. Should be boolean value or an integer number'
+      ));
+      return callback();
     }
 
     _.each(jsonObj, function (value, key) {

@@ -7,12 +7,14 @@ var through = require('through2'),
     jsYaml = require('js-yaml'),
     templateFilePath = __dirname + '/template.html',
     PluginError = gutil.PluginError,
+    VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
     WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
   defaults = {
+    type: 'constant',
     createModule: true,
     wrap: false,
     environment: null,
@@ -76,6 +78,11 @@ function gulpNgConfig (moduleName, configuration) {
       }
     }
 
+    if (!_.contains(VALID_TYPES, configuration.type)) {
+      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'type\' value'));
+      return callback();
+    }
+
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});
 
     var spaces = 0;
@@ -102,6 +109,7 @@ function gulpNgConfig (moduleName, configuration) {
     templateOutput = _.template(templateFile)({
       createModule: configuration.createModule,
       moduleName: moduleName,
+      type: configuration.type,
       constants: constants
     });
 

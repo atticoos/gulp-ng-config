@@ -315,6 +315,51 @@ describe('gulp-ng-config', function () {
             done();
           }));
     });
+    describe ('type', function () {
+      it('should generate a `value` module if `type` is specified with `value`', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_16.js'));
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            type: 'value'
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it ('should generate a `constant` module if `type` is specified with a `constant`', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js'));
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            type: 'constant'
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it ('should generate a `constant` module by default if `moduleTye` is not supplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js'));
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            type: undefined
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it ('should emit an error if an invalid `type` is supplied', function (done) {
+        gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            type: 'invalid'
+          }))
+          .on('error', function (error) {
+            expect(error.message).to.be.eql('invalid \'type\' value');
+            done();
+          });
+      });
+    });
     //it ('should generate an error when unacceptable value passed as pretty param', function (done) {
     //TODO should handle an error
     //var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_13.js'));

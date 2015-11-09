@@ -8,6 +8,8 @@
 [![Code Climate](https://codeclimate.com/github/ajwhite/gulp-ng-config/badges/gpa.svg)](https://codeclimate.com/github/ajwhite/gulp-ng-config)
 [![Dependency Status](http://img.shields.io/gemnasium/ajwhite/gulp-ng-config.svg?style=flat)](https://gemnasium.com/ajwhite/gulp-ng-config)
 
+[![NPM](https://nodei.co/npm/gulp-ng-config.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/gulp-ng-config/)
+
 It's often useful to generate a file of constants, usually as environment variables, for your Angular apps.
 This Gulp plugin will allow you to provide an object of properties and will generate an Angular module of constants.
 
@@ -222,7 +224,7 @@ gulpNgConfig('myApp.config', {
 The reuslting file will contain:
 ```js
 define(["angular"], function () {
- return angular.module('myApp.config')
+ return angular.module('myApp.config', [])
 .constant('..', '..');
 });
 ```

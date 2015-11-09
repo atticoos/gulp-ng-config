@@ -62,6 +62,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.environment](#options.environment)
 - [options.constants](#options.constants)
 - [options.createModule](#options.createModule)
+- [options.type](#options.type)
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
 
@@ -154,6 +155,26 @@ angular.module('myApp.config', [])
 .constant('array', ["one",2,{"three":"four"},[5,"six"]])
 .constant('random', "value");
 
+```
+
+### <a id="options.type"></a>options.type
+Type: `String` Default value: `'constant'` Optional
+
+This allows configuring the type of service that is created -- a `constant` or a `value`. By default, a `constant` is created, but a `value` can be overridden. Possible types:
+
+- `'constant'`
+- `'value'`
+
+```javascript
+gulpNgConfig('myApp.config', {
+  type: 'value'
+});
+```
+
+This will produce `configFile.js` with a `value` service.
+```javascript
+angular.module('myApp.config', [])
+.value('..', '..');
 ```
 
 ### <a id="options.createModule"></a>options.createModule

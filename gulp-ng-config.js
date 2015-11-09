@@ -64,7 +64,7 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     if (!_.isPlainObject(jsonObj)) {
-      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid JSON object provided'));
+      this.emit('error', new PluginError(PLUGIN_NAME, 'configuration file contains invalid JSON'));
       return callback();
     }
 

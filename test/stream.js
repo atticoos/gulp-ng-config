@@ -71,12 +71,36 @@ describe('gulp-ng-config', function () {
       var file,
           stream;
 
+      file = new File({
+        path: 'mock/path.json',
+        contents: new Buffer('{"foo": "bar"}')
+      });
+
       stream = plugin('asdf', {
         parser: 'invalidParser'
       });
       stream.on('error', function (error) {
         expect(error.message).to.be.eql('invalidParser' + ' is not supported as a valid parser');
       });
+      expect(function () {
+        stream.write(file);
+      }).not.to.throw();
+    });
+    it ('should emit an error if the configuration exposes an invalid JSON object', function (done) {
+      var file,
+          stream;
+
+      file = new File({
+        path: 'mock/path.json',
+        contents: new Buffer('1')
+      });
+
+      stream = plugin('asdf')
+        .on('error', function (error) {
+          expect(error.message).to.equal('configuration file contains invalid JSON');
+          done();
+        });
+
       expect(function () {
         stream.write(file);
       }).not.to.throw();
@@ -136,6 +160,24 @@ describe('gulp-ng-config', function () {
               done();
             }));
       });
+      it('should emit an error if an invalid yml file is provided', function (done) {
+        var file,
+            stream;
+
+        file = new File({
+          path: 'mock/path.yml',
+          contents: new Buffer('[}]')
+        });
+
+        stream = plugin('name')
+          .on('error', function (error) {
+            expect(error.message).to.equal('invaild YML file provided');
+            done();
+          });
+        expect(function () {
+          stream.write(file);
+        }).not.to.throw();
+      });
     });
     describe('yaml', function () {
       it('should generate the angular template with object properties', function (done) {
@@ -148,6 +190,24 @@ describe('gulp-ng-config', function () {
               expect(file.contents.toString()).to.equal(expectedOutput.toString());
               done();
             }));
+      });
+      it('should emit an error if an invalid yaml file is provided', function (done) {
+        var file,
+            stream;
+
+        file = new File({
+          path: 'mock/path.yaml',
+          contents: new Buffer('[}]')
+        });
+
+        stream = plugin('name')
+          .on('error', function (error) {
+            expect(error.message).to.equal('invaild YML file provided');
+            done();
+          });
+        expect(function () {
+          stream.write(file);
+        }).not.to.throw();
       });
     });
   });

@@ -315,23 +315,23 @@ describe('gulp-ng-config', function () {
             done();
           }));
     });
-    describe ('moduleType', function () {
-      it('should generate a `value` module if `moduleType` is specified with `value`', function (done) {
+    describe ('type', function () {
+      it('should generate a `value` module if `type` is specified with `value`', function (done) {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_16.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
           .pipe(plugin('gulp-ng-config', {
-            moduleType: 'value'
+            type: 'value'
           }))
           .pipe(through.obj(function (file) {
             expect(file.contents.toString()).to.equal(expectedOutput.toString());
             done();
           }));
       });
-      it ('should generate a `constant` module if `moduleType` is specified with a `constant`', function (done) {
+      it ('should generate a `constant` module if `type` is specified with a `constant`', function (done) {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
           .pipe(plugin('gulp-ng-config', {
-            moduleType: 'constant'
+            type: 'constant'
           }))
           .pipe(through.obj(function (file) {
             expect(file.contents.toString()).to.equal(expectedOutput.toString());
@@ -342,20 +342,20 @@ describe('gulp-ng-config', function () {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
           .pipe(plugin('gulp-ng-config', {
-            moduleType: undefined
+            type: undefined
           }))
           .pipe(through.obj(function (file) {
             expect(file.contents.toString()).to.equal(expectedOutput.toString());
             done();
           }));
       });
-      it ('should emit an error if an invalid `moduleType` is supplied', function (done) {
+      it ('should emit an error if an invalid `type` is supplied', function (done) {
         gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
           .pipe(plugin('gulp-ng-config', {
-            moduleType: 'invalid'
+            type: 'invalid'
           }))
           .on('error', function (error) {
-            expect(error.message).to.be.eql('invalid \'moduleType\' value');
+            expect(error.message).to.be.eql('invalid \'type\' value');
             done();
           });
       });

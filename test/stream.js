@@ -205,65 +205,16 @@ describe('gulp-ng-config', function () {
           }));
     });
     it('should generate the angular template with a custom wrap function if options.wrap is a string',
-        function (done) {
-          var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_7.js'));
-          gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
-              .pipe(plugin('gulp-ng-config', {
-                wrap: 'define([\'angular\', function () {\n return <%= module %>}]);\n'
-              }))
-              .pipe(through.obj(function (file) {
-                expect(file.contents.toString()).to.equal(expectedOutput.toString());
-                done();
-              }));
-        });
-    it('should select an embedded json object if an environment key is supplied and the key exists', function (done) {
-      var expectedOutputA = fs.readFileSync(path.normalize(__dirname + '/mocks/output_8.js')), // match envA
-          expectedOutputB = fs.readFileSync(path.normalize(__dirname + '/mocks/output_9.js')), // match envB
-          expectedOutputC = fs.readFileSync(path.normalize(__dirname + '/mocks/output_15.js')), // match envA
-          streamA = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
-          streamB = gulp.src(path.normalize(__dirname + '/mocks/input_3.json')),
-          streamC = gulp.src(path.normalize(__dirname + '/mocks/input_4.json'));
-
-      // tests output with `environmentA`
-      streamA.pipe(plugin('gulp-ng-config', {
-        environment: 'environmentA'
-      }))
-      .pipe(through.obj(function (file) {
-        expect(file.contents.toString()).to.equal(expectedOutputA.toString());
-      }));
-
-      // tests output with `environmentB`
-      streamB.pipe(plugin('gulp-ng-config', {
-        environment: 'environmentB'
-      }))
-      .pipe(through.obj(function (file) {
-        expect(file.contents.toString()).to.equal(expectedOutputB.toString());
-      }));
-
-      // tests output with nested environment `env.environmentA`
-      streamC
-      .pipe(plugin('gulp-ng-config', {
-        environment: 'env.environmentA'
-      }))
-      .pipe(through.obj(function (file) {
-        expect(file.contents.toString()).to.equal(expectedOutputC.toString());
-      }));
-
-      es.merge(streamA, streamB, streamC)
-      .pipe(through.obj(function () {
-        done();
-      }));
-    });
-
-    it('should emit an error if an environment key is supplied and the key does not exist', function (done) {
-      var stream = gulp.src(path.normalize(__dirname + '/mocks/input_3.json'));
-
-      stream.pipe(plugin('gulp-ng-config', {
-        environment: 'nonExistingEnvironment'
-      })).on('error', function (error) {
-        expect(error.message).to.be.eql('invalid \'environment\' value');
-        done();
-      });
+      function (done) {
+      var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_7.js'));
+      gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))
+          .pipe(plugin('gulp-ng-config', {
+            wrap: 'define([\'angular\', function () {\n return <%= module %>}]);\n'
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
     });
 
     it('should merge environment keys with constant keys', function (done) {
@@ -315,7 +266,39 @@ describe('gulp-ng-config', function () {
             done();
           }));
     });
-    describe ('type', function () {
+    describe('environment', function () {
+      it ('should select an embedded json object if an environment key is supplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_8.js')));
+        gulp.src(path.normalize(path.join(__dirname, 'mocks/input_3.json')))
+          .pipe(plugin('gulp-ng-config', {
+            environment: 'environmentA'
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it ('should select an embedded json object if a namespaced environment key is supplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_15.js')));
+        gulp.src(path.normalize(path.join(__dirname, 'mocks/input_4.json')))
+          .pipe(plugin('gulp-ng-config', {
+            environment: 'env.environmentA'
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it('should emit an error if an environment key is supplied and the key does not exist', function (done) {
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: 'nonExistingEnvironment'
+        })).on('error', function (error) {
+          expect(error.message).to.be.eql('invalid \'environment\' value');
+          done();
+        });
+      });
+    });
+    describe('type', function () {
       it('should generate a `value` module if `type` is specified with `value`', function (done) {
         var expectedOutput = fs.readFileSync(path.normalize(__dirname + '/mocks/output_16.js'));
         gulp.src(path.normalize(__dirname + '/mocks/input_2.json'))

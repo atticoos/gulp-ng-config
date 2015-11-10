@@ -67,6 +67,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.type](#options.type)
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
+- [options.pretty](#options.pretty)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -257,6 +258,27 @@ angular.module('myApp.config', [])
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]});
 ```
+
+### <a id="options.pretty"></a>options.pretty
+Type: `Number|Boolean` Default value: `false` Optional
+
+This allows `JSON.stringify` to produce a `pretty` formatted output string.
+
+```js
+gulp.src('config.json')
+.pipe(gulpNgConfig('myApp.config', {
+  pretty: true // or 2, 4, etc -- all representing the number of spaces to indent
+}));
+```
+
+Will output a formatted `JSON` object in the constants, instead of inline.
+```js
+angular.module("gulp-ng-config", [])
+.constant("one", {
+  "two": "three"
+});
+```
+
 
 ## Additional Usages
 

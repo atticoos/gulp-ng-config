@@ -9,7 +9,8 @@ var through = require('through2'),
     PluginError = gutil.PluginError,
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
-    WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n';
+    WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n',
+    ES6_TEMPLATE = 'import angular from \'angular\';\nexport default <%= module %>';
 
 function gulpNgConfig (moduleName, configuration) {
   var templateFile, stream, defaults;
@@ -115,7 +116,10 @@ function gulpNgConfig (moduleName, configuration) {
     });
 
     if (configuration.wrap) {
-      if (typeof configuration.wrap === 'string') {
+      if (typeof configuration.wrap === 'string' &&
+        (configuration.wrap.toUpperCase() === 'ES6' || configuration.wrap.toUpperCase() === 'ES2015')) {
+        wrapTemplate = ES6_TEMPLATE;
+      } else if (typeof configuration.wrap === 'string') {
         wrapTemplate = configuration.wrap;
       } else {
         wrapTemplate = WRAP_TEMPLATE;

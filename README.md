@@ -4,7 +4,11 @@
 [![NPM version](http://img.shields.io/npm/v/gulp-ng-config.svg?style=flat)](https://npmjs.org/package/gulp-ng-config)
 [![NPM version](http://img.shields.io/npm/dm/gulp-ng-config.svg?style=flat)](https://npmjs.org/package/gulp-ng-config)
 [![Build Status](http://img.shields.io/travis/ajwhite/gulp-ng-config.svg?style=flat)](http://travis-ci.org/ajwhite/gulp-ng-config)
+[![Coverage Status](https://coveralls.io/repos/ajwhite/gulp-ng-config/badge.svg?branch=develop&service=github)](https://coveralls.io/github/ajwhite/gulp-ng-config?branch=develop)
+[![Code Climate](https://codeclimate.com/github/ajwhite/gulp-ng-config/badges/gpa.svg)](https://codeclimate.com/github/ajwhite/gulp-ng-config)
 [![Dependency Status](http://img.shields.io/gemnasium/ajwhite/gulp-ng-config.svg?style=flat)](https://gemnasium.com/ajwhite/gulp-ng-config)
+
+[![NPM](https://nodei.co/npm/gulp-ng-config.png?downloads=true&downloadRank=true&stars=true)](https://nodei.co/npm/gulp-ng-config/)
 
 It's often useful to generate a file of constants, usually as environment variables, for your Angular apps.
 This Gulp plugin will allow you to provide an object of properties and will generate an Angular module of constants.
@@ -20,6 +24,9 @@ It's pretty simple:
 ## Example Usage
 We start with our task. Our source file is a JSON file containing our configuration. We will pipe this through `gulpNgConfig` and out will come an angular module of constants.
 ```javascript
+var gulp = require('gulp');
+var gulpNgConfig = require('gulp-ng-config');
+
 gulp.task('test', function () {
   gulp.src('configFile.json')
   .pipe(gulpNgConfig('myApp.config'))
@@ -57,8 +64,10 @@ Currently there are a few configurable options to control the output of your con
 - [options.environment](#options.environment)
 - [options.constants](#options.constants)
 - [options.createModule](#options.createModule)
+- [options.type](#options.type)
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
+- [options.pretty](#options.pretty)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -91,8 +100,42 @@ gulpNgConfig('myApp.config', {
 Expected output:
 ```js
 angular.module('myApp.config', [])
-.contant('EnvironmentConfig', {"api": "https://api.production.com/"});
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
+
+#### Nested Environment
+If the configuration is nested it can be accessed by the namespace, for example
+```json
+{
+  "version": "0.1.0",
+  "env": {
+    "local": {
+      "EnvironmentConfig": {
+        "api": "http://localhost/"
+      }
+    },
+    "production": {
+      "EnvironmentConfig": {
+        "api": "https://api.production.com/"
+      }
+    }
+  }
+}
+```
+
+Usage of the plugin:
+```js
+gulpNgConfig('myApp.config', {
+  environment: 'env.production'
+})
+```
+
+Expected output:
+```js
+angular.module('myApp.config', [])
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
+```
+
 
 ### <a id="options.constants"></a>options.constants
 Type: `Object` Optional
@@ -117,6 +160,26 @@ angular.module('myApp.config', [])
 
 ```
 
+### <a id="options.type"></a>options.type
+Type: `String` Default value: `'constant'` Optional
+
+This allows configuring the type of service that is created -- a `constant` or a `value`. By default, a `constant` is created, but a `value` can be overridden. Possible types:
+
+- `'constant'`
+- `'value'`
+
+```javascript
+gulpNgConfig('myApp.config', {
+  type: 'value'
+});
+```
+
+This will produce `configFile.js` with a `value` service.
+```javascript
+angular.module('myApp.config', [])
+.value('..', '..');
+```
+
 ### <a id="options.createModule"></a>options.createModule
 Type: `Boolean` Default value: `true` Optional
 
@@ -135,6 +198,10 @@ angular.module('myApp.config')
 
 ### <a id="options.wrap"></a>options.wrap
 Type: `Boolean` or `String` Default value: `false` Optional
+
+Presets:
+- `ES6`
+- `ES2015`
 
 Wrap the configuration module in an IIFE or your own wrapper.
 
@@ -162,7 +229,7 @@ gulpNgConfig('myApp.config', {
 The reuslting file will contain:
 ```js
 define(["angular"], function () {
- return angular.module('myApp.config')
+ return angular.module('myApp.config', [])
 .constant('..', '..');
 });
 ```
@@ -183,9 +250,9 @@ object:
 
 ```javascript
 gulp.src("config.yml")
-gulpNgConfig('myApp.config', {
+.pipe(gulpNgConfig('myApp.config', {
   parser: 'yml'
-});
+}));
 ```
 
 Generating,
@@ -195,6 +262,50 @@ angular.module('myApp.config', [])
 .constant('integer', 12345)
 .constant('object', {"one":2,"three":["four"]});
 ```
+
+### <a id="options.pretty"></a>options.pretty
+Type: `Number|Boolean` Default value: `false` Optional
+
+This allows `JSON.stringify` to produce a `pretty` formatted output string.
+
+```js
+gulp.src('config.json')
+.pipe(gulpNgConfig('myApp.config', {
+  pretty: true // or 2, 4, etc -- all representing the number of spaces to indent
+}));
+```
+
+Will output a formatted `JSON` object in the constants, instead of inline.
+```js
+angular.module("gulp-ng-config", [])
+.constant("one", {
+  "two": "three"
+});
+```
+
+
+## Additional Usages
+
+### Without a json/yaml file on disk
+Use `buffer-to-vinyl` to create and stream a vinyl file into `gulp-ng-config`. Now config values can come from environment variables, command-line arguments or anywhere else.
+
+```js
+var b2v = require('buffer-to-vinyl');
+var gulpNgConfig = require('gulp-ng-config');
+
+gulp.task('make-config', function() {
+  var json = JSON.stringify({
+    // your config here
+  });
+
+  return b2v.stream(new Buffer(json), 'config.js')
+    .pipe(gulpNgConfig('myApp.config'))
+    .pipe(gulp.dest('build'));
+});
+```
+
+### ES6/ES2015
+An ES6/ES2015 template can be generated by passing `wrap: true` as a configuration to the plugin
 
 ## Contributing
 Contributions, issues, suggestions, and all other remarks are welcomed. To run locally just fork &amp; clone the project and run `npm install`. Before submitting a Pull Request, make sure that your changes pass `gulp test`, and if you are introducing or changing a feature, that you add/update any tests involved.

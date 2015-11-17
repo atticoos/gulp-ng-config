@@ -1,4 +1,4 @@
 define(['angular', function () {
- return angular.module('gulp-ng-config', [])
-.constant('one', {"two":"three"});
+ return angular.module("gulp-ng-config", [])
+.constant("one", {"two":"three"});
 }]);

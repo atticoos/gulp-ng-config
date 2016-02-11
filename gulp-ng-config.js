@@ -20,7 +20,11 @@ function gulpNgConfig (moduleName, configuration) {
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
+    pretty: false,
+    /* New supported plugin configuration properties */
+    embedInObject: false,
+    stripPrivateProperties: false,
+    stripHeadingCharacter: '_'
   };
 
   if (!moduleName) {
@@ -100,7 +104,23 @@ function gulpNgConfig (moduleName, configuration) {
       ));
       return callback();
     }
+    
+    // Add only non private properties
+    if(configuration.stripPrivateProperties) {
+      _.each(jsonObj, function (value, key) {
+        if(key[0] === configuration.stripHeadingCharacter) {
+          delete jsonObj[key];
+        } // if
+      });
+    };
 
+    // Embed configuration in a new object
+    if(configuration.embedInObject && typeof configuration.embedInObject === 'string') {
+      var embeddedProperties = {};
+      embeddedProperties[configuration.embedInObject] = jsonObj;
+      jsonObj = embeddedProperties;
+    } // if
+    
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
@@ -128,7 +148,7 @@ function gulpNgConfig (moduleName, configuration) {
         module: templateOutput
       });
     }
-
+    
     file.path = gutil.replaceExtension(file.path, '.js');
     file.contents = new Buffer(templateOutput);
     this.push(file);

@@ -23,8 +23,7 @@ function gulpNgConfig (moduleName, configuration) {
     pretty: false,
     /* New supported plugin configuration properties */
     embedInObject: false,
-    stripPrivateProperties: false,
-    stripHeadingCharacter: '_'
+    blacklist: false
   };
 
   if (!moduleName) {
@@ -106,9 +105,9 @@ function gulpNgConfig (moduleName, configuration) {
     }
     
     // Add only non private properties
-    if(configuration.stripPrivateProperties) {
+    if(configuration.blacklist instanceof RegExp) {
       _.each(jsonObj, function (value, key) {
-        if(key[0] === configuration.stripHeadingCharacter) {
+        if(configuration.blacklist.test(key)) {
           delete jsonObj[key];
         } // if
       });

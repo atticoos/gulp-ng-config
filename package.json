@@ -29,7 +29,7 @@
   "homepage": "https://github.com/ajwhite/gulp-ng-config",
   "dependencies": {
     "gulp-util": "^3.0.0",
-    "lodash": "^3.0.1",
+    "lodash": "^3.10.1",
     "through2": "^2.0.0",
     "js-yaml": "3.4.3"
   },

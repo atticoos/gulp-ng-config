@@ -5,7 +5,6 @@ var through = require('through2'),
     _ = require('lodash'),
     fs = require('fs'),
     jsYaml = require('js-yaml'),
-    templateFilePath = __dirname + '/template.html',
     PluginError = gutil.PluginError,
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
@@ -20,16 +19,18 @@ function gulpNgConfig (moduleName, configuration) {
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
-  };
+    pretty: false,
+    templateFilePath:  __dirname + '/template.html'
+};
 
   if (!moduleName) {
     throw new PluginError(PLUGIN_NAME, 'Missing required moduleName option for gulp-ng-config');
   }
 
-  templateFile = fs.readFileSync(templateFilePath, 'utf8');
   configuration = configuration || {};
   configuration = _.merge({}, defaults, configuration);
+
+  templateFile = fs.readFileSync(configuration.templateFilePath || defaults.templateFilePath, 'utf8');
 
   stream = through.obj(function (file, encoding, callback) {
     var constants = [],

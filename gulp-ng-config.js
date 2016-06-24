@@ -21,7 +21,7 @@ function gulpNgConfig (moduleName, configuration) {
     parser: null,
     pretty: false,
     templateFilePath:  __dirname + '/template.html'
-};
+  };
 
   if (!moduleName) {
     throw new PluginError(PLUGIN_NAME, 'Missing required moduleName option for gulp-ng-config');

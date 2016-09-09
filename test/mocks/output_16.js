@@ -1,2 +1,2 @@
-angular.module("gulp-ng-config", [])
-.value("one", {"two":"three"});
+angular.module('gulp-ng-config', [])
+.value('one', {'two':'three'});

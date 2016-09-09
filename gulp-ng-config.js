@@ -9,7 +9,7 @@ var through = require('through2'),
     PluginError = gutil.PluginError,
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
-    WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n',
+    WRAP_TEMPLATE = '(function () {\n return <%= module %>\n})();\n',
     ES6_TEMPLATE = 'import angular from \'angular\';\nexport default <%= module %>';
 
 function gulpNgConfig (moduleName, configuration) {
@@ -104,7 +104,7 @@ function gulpNgConfig (moduleName, configuration) {
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
-        value: JSON.stringify(value, null, spaces)
+        value: JSON.stringify(value, null, spaces).replace(/"/g, '\'')
       });
     });
 

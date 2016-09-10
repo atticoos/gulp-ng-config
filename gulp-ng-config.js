@@ -104,7 +104,9 @@ function gulpNgConfig (moduleName, configuration) {
     _.each(jsonObj, function (value, key) {
       constants.push({
         name: key,
-        value: JSON.stringify(value, null, spaces).replace(/"/g, '\'')
+        value: JSON.stringify(value, null, spaces).replace(/([\\"])?"/g, function ($0, $1) {
+          return $1 ? '"' : '\'';
+        })
       });
     });
 

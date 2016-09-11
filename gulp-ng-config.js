@@ -20,7 +20,8 @@ function gulpNgConfig (moduleName, configuration) {
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
+    pretty: false,
+    singleQuotes: false
   };
 
   if (!moduleName) {
@@ -102,11 +103,15 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     _.each(jsonObj, function (value, key) {
+      var valStr = JSON.stringify(value, null, spaces);
+      if (configuration.singleQuotes === true) {
+        valStr = valStr.replace(/([\\"])?"/g, function ($0, $1) {
+          return $1 ? '"' : '\'';
+        });
+      }
       constants.push({
         name: key,
-        value: JSON.stringify(value, null, spaces).replace(/([\\"])?"/g, function ($0, $1) {
-          return $1 ? '"' : '\'';
-        })
+        value: valStr
       });
     });
 
@@ -114,7 +119,8 @@ function gulpNgConfig (moduleName, configuration) {
       createModule: configuration.createModule,
       moduleName: moduleName,
       type: configuration.type,
-      constants: constants
+      constants: constants,
+      singleQuotes: configuration.singleQuotes
     });
 
     if (configuration.wrap) {

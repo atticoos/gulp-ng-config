@@ -68,6 +68,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
 - [options.pretty](#options.pretty)
+- [options.singleQuotes](#options.singleQuotes)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -280,6 +281,26 @@ Will output a formatted `JSON` object in the constants, instead of inline.
 angular.module("gulp-ng-config", [])
 .constant("one", {
   "two": "three"
+});
+```
+
+### <a id="options.singleQuotes"></a>options.singleQuotes
+Type: `Boolean` Default value: `false` Optional
+
+By default the output module will use all double-quotes. If your linter settings prefer single quotes, use the `singleQuotes` option to output the module using only single-quotes.
+
+```js
+gulp.src('config.json')
+.pipe(gulpNgConfig('myApp.config', {
+  singleQuotes: true
+}));
+```
+
+Generating,
+```js
+angular.module('gulp-ng-config', [])
+.constant('one', {
+  'two': 'three'
 });
 ```
 

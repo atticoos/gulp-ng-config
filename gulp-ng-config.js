@@ -9,7 +9,7 @@ var through = require('through2'),
     PluginError = gutil.PluginError,
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
-    WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n',
+    WRAP_TEMPLATE = '(function () {\n return <%= module %>\n})();\n',
     ES6_TEMPLATE = 'import angular from \'angular\';\nexport default <%= module %>';
 
 function gulpNgConfig (moduleName, configuration) {
@@ -20,7 +20,8 @@ function gulpNgConfig (moduleName, configuration) {
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
+    pretty: false,
+    singleQuotes: false
   };
 
   if (!moduleName) {
@@ -102,9 +103,15 @@ function gulpNgConfig (moduleName, configuration) {
     }
 
     _.each(jsonObj, function (value, key) {
+      var valStr = JSON.stringify(value, null, spaces);
+      if (configuration.singleQuotes === true) {
+        valStr = valStr.replace(/([\\"])?"/g, function ($0, $1) {
+          return $1 ? '"' : '\'';
+        });
+      }
       constants.push({
         name: key,
-        value: JSON.stringify(value, null, spaces)
+        value: valStr
       });
     });
 
@@ -112,7 +119,8 @@ function gulpNgConfig (moduleName, configuration) {
       createModule: configuration.createModule,
       moduleName: moduleName,
       type: configuration.type,
-      constants: constants
+      constants: constants,
+      singleQuotes: configuration.singleQuotes
     });
 
     if (configuration.wrap) {

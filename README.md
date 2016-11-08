@@ -68,6 +68,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
 - [options.pretty](#options.pretty)
+- [options.keys](#options.keys)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -281,6 +282,34 @@ angular.module("gulp-ng-config", [])
 .constant("one", {
   "two": "three"
 });
+```
+
+### <a id="options.keys"></a>options.keys
+Type: `Array` Optional
+
+If you only want some of the keys from the object imported, you can supply the keys you want the plugin to load from the object imported.
+
+Example `config.json` file with unwanted keys:
+```json
+{
+  "version": "0.0.1",
+  "wanted key": "wanted value",
+  "unwanted key": "unwanted value"
+}
+```
+
+Usage of the plugin:
+```js
+gulpNgConfig("myApp.config", {
+  keys: ["version", "wanted key"]
+})
+```
+
+Expected output:
+```js
+angular.module("myApp.config", [])
+.constant("version", "0.0.1")
+.constant("wanted key", "wanted value");
 ```
 
 

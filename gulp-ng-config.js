@@ -20,7 +20,8 @@ function gulpNgConfig (moduleName, configuration) {
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
+    pretty: false,
+    keys: null
   };
 
   if (!moduleName) {
@@ -83,6 +84,15 @@ function gulpNgConfig (moduleName, configuration) {
     if (!_.contains(VALID_TYPES, configuration.type)) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'type\' value'));
       return callback();
+    }
+
+    if (configuration.keys) {
+      if (_.isArray(configuration.keys)) {
+        jsonObj = _.pick(jsonObj, configuration.keys);
+      } else {
+        this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'keys\' value'));
+        return callback();
+      }
     }
 
     jsonObj = _.merge({}, jsonObj, configuration.constants || {});

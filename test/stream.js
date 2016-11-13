@@ -347,6 +347,36 @@ describe('gulp-ng-config', function () {
           done();
         });
       });
+      it('should select specified embedded json objects if an array of environment keys is suplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_18.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: ['environmentA', 'environmentB']
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+      it('should only include constans keys if an empty array is suplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_19.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: [],
+          constants: {
+            constant: 'value'
+          }
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+      it('should select specified embedded json objects from array with namespaced environment keys', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_20.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: ['environmentA', 'environmentB.four']
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
     });
     describe('type', function () {
       it('should generate a `value` module if `type` is specified with `value`', function (done) {

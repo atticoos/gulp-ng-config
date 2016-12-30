@@ -12,7 +12,7 @@ var through = require('through2'),
     ES6_TEMPLATE = 'import angular from \'angular\';\nexport default <%= module %>';
 
 function gulpNgConfig (moduleName, configuration) {
-  var templateFile, stream, defaults;
+  var stream, defaults;
   defaults = {
     type: 'constant',
     createModule: true,
@@ -30,15 +30,21 @@ function gulpNgConfig (moduleName, configuration) {
   configuration = configuration || {};
   configuration = _.merge({}, defaults, configuration);
 
-  templateFile = fs.readFileSync(configuration.templateFilePath || defaults.templateFilePath, 'utf8');
-
   stream = through.obj(function (file, encoding, callback) {
     var constants = [],
+        templateFile,
         templateOutput,
         jsonObj,
         wrapTemplate,
         spaces,
         environmentKeys;
+
+    try {
+      templateFile = fs.readFileSync(configuration.templateFilePath || defaults.templateFilePath, 'utf8');
+    } catch (error) {
+      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid templateFilePath option, file not found'));
+      return callback();
+    }
 
     if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
       configuration.parser = 'yml';

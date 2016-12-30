@@ -478,5 +478,39 @@ describe('gulp-ng-config', function () {
           });
       });
     });
+    describe('templateFilePath', function () {
+      it('should load a custom template file', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_21.js')));
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: path.normalize(path.join(__dirname, 'mocks/customTemplate.html'))
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it('should generate an error if the template file does not exist', function (done) {
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: 'non/existant/path.js'
+          }))
+          .on('error', function (error) {
+            expect(error.message).to.equal('invalid templateFilePath option, file not found');
+            done();
+          });
+      });
+      it('should use the default template path if a falsy value is provided', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_2.js')));
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: null
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+    });
   });
 });

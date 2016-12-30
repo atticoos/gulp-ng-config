@@ -37,7 +37,6 @@ function gulpNgConfig (moduleName, configuration) {
         jsonObj,
         wrapTemplate,
         spaces,
-        envObj,
         environmentKeys;
 
     if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
@@ -74,17 +73,23 @@ function gulpNgConfig (moduleName, configuration) {
 
     // select the environment in the configuration
     if (configuration.environment) {
-      envObj = {};
+      // transform values into a flat array
       environmentKeys = [].concat(configuration.environment);
-      _.forEach(environmentKeys, _.bind(function (environmentKey) {
-        if (_.get(jsonObj, environmentKey, false)) {
-          _.merge(envObj, _.get(jsonObj, environmentKey));
-        } else {
+
+      // build the output based on the specifid keys
+      jsonObj = environmentKeys.reduce(_.bind(function (obj, environmentKey) {
+        var value = _.get(jsonObj, environmentKey);
+
+        // if the key does not exist, raise an error.
+        if (value === undefined) {
           this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'environment\' value'));
           return callback();
         }
-      }, this));
-      jsonObj = envObj;
+
+        // add the value to the output object
+        _.merge(obj, value);
+        return obj;
+      }, this), {});
     }
 
     if (!_.contains(VALID_TYPES, configuration.type)) {

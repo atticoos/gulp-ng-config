@@ -135,12 +135,13 @@ Expected output:
 angular.module('myApp.config', [])
 .constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
+
 #### Multiple Environment keys
-Multiple environment keys can be supplied in an array, for example for global and environmental constants 
+Multiple environment keys can be supplied in an array, for example for global and environmental constants
 ```json
 {
   "global": {
-   version: "0.1.0"
+    "version": "0.1.0"
    },
   "env": {
     "local": {
@@ -168,7 +169,7 @@ Expected output:
 ```js
 angular.module('myApp.config', [])
 .constant('EnvironmentConfig', {"api": "https://api.production.com/"});
-.constant('version', 0.1.0);
+.constant('version', '0.1.0');
 ```
 
 ### <a id="options.constants"></a>options.constants

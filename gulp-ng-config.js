@@ -5,7 +5,6 @@ var through = require('through2'),
     _ = require('lodash'),
     fs = require('fs'),
     jsYaml = require('js-yaml'),
-    templateFilePath = __dirname + '/template.html',
     PluginError = gutil.PluginError,
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
@@ -13,30 +12,39 @@ var through = require('through2'),
     ES6_TEMPLATE = 'import angular from \'angular\';\nexport default <%= module %>';
 
 function gulpNgConfig (moduleName, configuration) {
-  var templateFile, stream, defaults;
+  var stream, defaults;
   defaults = {
     type: 'constant',
     createModule: true,
     wrap: false,
     environment: null,
     parser: null,
-    pretty: false
+    pretty: false,
+    templateFilePath:  __dirname + '/template.html'
   };
 
   if (!moduleName) {
     throw new PluginError(PLUGIN_NAME, 'Missing required moduleName option for gulp-ng-config');
   }
 
-  templateFile = fs.readFileSync(templateFilePath, 'utf8');
   configuration = configuration || {};
   configuration = _.merge({}, defaults, configuration);
 
   stream = through.obj(function (file, encoding, callback) {
     var constants = [],
+        templateFile,
         templateOutput,
         jsonObj,
         wrapTemplate,
-        spaces;
+        spaces,
+        environmentKeys;
+
+    try {
+      templateFile = fs.readFileSync(configuration.templateFilePath || defaults.templateFilePath, 'utf8');
+    } catch (error) {
+      this.emit('error', new PluginError(PLUGIN_NAME, 'invalid templateFilePath option, file not found'));
+      return callback();
+    }
 
     if (!configuration.parser && (_.endsWith(file.path, 'yml') || _.endsWith(file.path, 'yaml'))) {
       configuration.parser = 'yml';
@@ -72,12 +80,23 @@ function gulpNgConfig (moduleName, configuration) {
 
     // select the environment in the configuration
     if (configuration.environment) {
-      if (_.get(jsonObj, configuration.environment, false)) {
-        jsonObj = _.get(jsonObj, configuration.environment);
-      } else {
-        this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'environment\' value'));
-        return callback();
-      }
+      // transform values into a flat array
+      environmentKeys = [].concat(configuration.environment);
+
+      // build the output based on the specifid keys
+      jsonObj = environmentKeys.reduce(_.bind(function (obj, environmentKey) {
+        var value = _.get(jsonObj, environmentKey);
+
+        // if the key does not exist, raise an error.
+        if (value === undefined) {
+          this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'environment\' value'));
+          return callback();
+        }
+
+        // add the value to the output object
+        _.merge(obj, value);
+        return obj;
+      }, this), {});
     }
 
     if (!_.contains(VALID_TYPES, configuration.type)) {

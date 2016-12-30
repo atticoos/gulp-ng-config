@@ -68,6 +68,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.wrap](#options.wrap)
 - [options.parser](#options.parser)
 - [options.pretty](#options.pretty)
+- [options.templateFilePath](#options.templateFilePath)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -136,6 +137,41 @@ angular.module('myApp.config', [])
 .constant('EnvironmentConfig', {"api": "https://api.production.com/"});
 ```
 
+#### Multiple Environment keys
+Multiple environment keys can be supplied in an array, for example for global and environmental constants
+```json
+{
+  "global": {
+    "version": "0.1.0"
+   },
+  "env": {
+    "local": {
+      "EnvironmentConfig": {
+        "api": "http://localhost/"
+      }
+    },
+    "production": {
+      "EnvironmentConfig": {
+        "api": "https://api.production.com/"
+      }
+    }
+  }
+}
+```
+
+Usage of the plugin:
+```js
+gulpNgConfig('myApp.config', {
+  environment: ['env.production', 'global']
+})
+```
+
+Expected output:
+```js
+angular.module('myApp.config', [])
+.constant('EnvironmentConfig', {"api": "https://api.production.com/"});
+.constant('version', '0.1.0');
+```
 
 ### <a id="options.constants"></a>options.constants
 Type: `Object` Optional
@@ -283,6 +319,42 @@ angular.module("gulp-ng-config", [])
 });
 ```
 
+### <a id="options.templateFilePath"></a>options.templateFilePath
+Type: `String` Optional
+
+This allows the developer to provide a custom output template.
+
+Sample template:
+`angularConfigTemplate.html`
+```html
+var foo = 'bar';
+
+angular.module("<%= moduleName %>"<% if (createModule) { %>, []<% } %>)<% _.forEach(constants, function (constant) { %>
+.<%= type %>("<%= constant.name %>", <%= constant.value %>)<% }); %>;
+```
+
+Configuration:
+```json
+{
+  "Foo": "bar"
+}
+```
+
+Gulp task:
+```js
+gulp.src('config.json')
+.pipe(gulpNgConfig('myApp.config', {
+  templateFilePath: path.normalize(path.join(__dirname, 'templateFilePath.html'))
+}));
+```
+
+Sample output:
+```js
+var foo = 'bar';
+
+angular.module('myApp.config', [])
+.constant('Foo', 'bar');
+```
 
 ## Additional Usages
 

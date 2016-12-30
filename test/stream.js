@@ -347,6 +347,36 @@ describe('gulp-ng-config', function () {
           done();
         });
       });
+      it('should select specified embedded json objects if an array of environment keys is suplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_18.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: ['environmentA', 'environmentB']
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+      it('should only include constans keys if an empty array is suplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_19.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: [],
+          constants: {
+            constant: 'value'
+          }
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
+      it('should select specified embedded json objects from array with namespaced environment keys', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_20.js')));
+        gulp.src(path.normalize(__dirname + '/mocks/input_3.json')).pipe(plugin('gulp-ng-config', {
+          environment: ['environmentA', 'environmentB.four']
+        })).pipe(through.obj(function (file) {
+          expect(file.contents.toString()).to.equal(expectedOutput.toString());
+          done();
+        }));
+      });
     });
     describe('type', function () {
       it('should generate a `value` module if `type` is specified with `value`', function (done) {
@@ -446,6 +476,40 @@ describe('gulp-ng-config', function () {
             expect(error.message).to.equal('invalid \'pretty\' value. Should be boolean value or an integer number');
             done();
           });
+      });
+    });
+    describe('templateFilePath', function () {
+      it('should load a custom template file', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_21.js')));
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: path.normalize(path.join(__dirname, 'mocks/customTemplate.html'))
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it('should generate an error if the template file does not exist', function (done) {
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: 'non/existant/path.js'
+          }))
+          .on('error', function (error) {
+            expect(error.message).to.equal('invalid templateFilePath option, file not found');
+            done();
+          });
+      });
+      it('should use the default template path if a falsy value is provided', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_2.js')));
+        gulp.src(path.normalize(path.join(__dirname, '/mocks/input_2.json')))
+          .pipe(plugin('gulp-ng-config', {
+            templateFilePath: null
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
       });
     });
   });

@@ -11,7 +11,8 @@ describe('gulp-ng-config', function () {
       File = require('vinyl'),
       es = require('event-stream'),
       through = require('through2'),
-      fs = require('fs');
+      fs = require('fs'),
+      Readable = require('stream').Readable;
 
   before(function () {
     chai.use(spies);
@@ -30,7 +31,7 @@ describe('gulp-ng-config', function () {
       var mockFiles = [
         new File({
           path: 'mock/path.json',
-          contents: es.readArray(['one', 'two'])
+          contents: new Readable({objectMode: true}).wrap(es.readArray(['one', 'two']))
         }),
         new File({
           path: 'mock/path.json',

@@ -100,7 +100,7 @@ function gulpNgConfig (moduleName, configuration) {
       }, this), {});
     }
 
-    if (!_.contains(VALID_TYPES, configuration.type)) {
+    if (!_.includes(VALID_TYPES, configuration.type)) {
       this.emit('error', new PluginError(PLUGIN_NAME, 'invalid \'type\' value'));
       return callback();
     }

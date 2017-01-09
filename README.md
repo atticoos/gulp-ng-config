@@ -357,16 +357,16 @@ angular.module('myApp.config', [])
 .constant('Foo', 'bar');
 ```
 
-### <a id="options.templateFilePath"></a>options.fileName
+### <a id="options.fileName"></a>options.fileName
 Type: `String` Optional
 
-This allows the developer to change the output filename.
+This allows the developer to change the output filename (without file extension).
 
 Gulp task:
 ```js
 gulp.src('config.json')
 .pipe(gulpNgConfig('myApp.config', {
-  fileName: "myapp-config.js
+  fileName: "file-config"
 }));
 ```
 

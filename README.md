@@ -69,6 +69,7 @@ Currently there are a few configurable options to control the output of your con
 - [options.parser](#options.parser)
 - [options.pretty](#options.pretty)
 - [options.templateFilePath](#options.templateFilePath)
+- [options.fileName](#options.fileName)
 
 ### <a id="options.environment"></a>options.environment
 Type: `String` Optional
@@ -354,6 +355,19 @@ var foo = 'bar';
 
 angular.module('myApp.config', [])
 .constant('Foo', 'bar');
+```
+
+### <a id="options.templateFilePath"></a>options.fileName
+Type: `String` Optional
+
+This allows the developer to change the output filename.
+
+Gulp task:
+```js
+gulp.src('config.json')
+.pipe(gulpNgConfig('myApp.config', {
+  fileName: "myapp-config.js
+}));
 ```
 
 ## Additional Usages

@@ -11,7 +11,8 @@ describe('gulp-ng-config', function () {
       File = require('vinyl'),
       es = require('event-stream'),
       through = require('through2'),
-      fs = require('fs');
+      fs = require('fs'),
+      Readable = require('stream').Readable;
 
   before(function () {
     chai.use(spies);
@@ -30,7 +31,7 @@ describe('gulp-ng-config', function () {
       var mockFiles = [
         new File({
           path: 'mock/path.json',
-          contents: es.readArray(['one', 'two'])
+          contents: new Readable({objectMode: true}).wrap(es.readArray(['one', 'two']))
         }),
         new File({
           path: 'mock/path.json',
@@ -476,6 +477,27 @@ describe('gulp-ng-config', function () {
             expect(error.message).to.equal('invalid \'pretty\' value. Should be boolean value or an integer number');
             done();
           });
+      });
+    });
+    describe('keys', function () {
+      it ('should select some keys if a keys option is supplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_22.js')));
+        gulp.src(path.normalize(path.join(__dirname, 'mocks/input_5.json')))
+          .pipe(plugin('gulp-ng-config', {
+            keys: ['version', 'wanted']
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it('should emit an error if keys option is not an array', function (done) {
+        gulp.src(path.normalize(__dirname + '/mocks/input_5.json')).pipe(plugin('gulp-ng-config', {
+          keys: 'non-array value'
+        })).on('error', function (error) {
+          expect(error.message).to.be.eql('invalid \'keys\' value');
+          done();
+        });
       });
     });
     describe('templateFilePath', function () {

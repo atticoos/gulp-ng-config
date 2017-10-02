@@ -479,6 +479,27 @@ describe('gulp-ng-config', function () {
           });
       });
     });
+    describe('keys', function () {
+      it ('should select some keys if a keys option is supplied', function (done) {
+        var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_22.js')));
+        gulp.src(path.normalize(path.join(__dirname, 'mocks/input_5.json')))
+          .pipe(plugin('gulp-ng-config', {
+            keys: ['version', 'wanted']
+          }))
+          .pipe(through.obj(function (file) {
+            expect(file.contents.toString()).to.equal(expectedOutput.toString());
+            done();
+          }));
+      });
+      it('should emit an error if keys option is not an array', function (done) {
+        gulp.src(path.normalize(__dirname + '/mocks/input_5.json')).pipe(plugin('gulp-ng-config', {
+          keys: 'non-array value'
+        })).on('error', function (error) {
+          expect(error.message).to.be.eql('invalid \'keys\' value');
+          done();
+        });
+      });
+    });
     describe('templateFilePath', function () {
       it('should load a custom template file', function (done) {
         var expectedOutput = fs.readFileSync(path.normalize(path.join(__dirname, 'mocks/output_21.js')));

@@ -158,7 +158,7 @@ function gulpNgConfig (moduleName, configuration) {
       });
     }
 
-    file.path = gutil.replaceExtension(file.path, '.js');
+    file.path = gutil.replaceExtension(configuration.fileName || file.path, '.js');
     file.contents = new Buffer(templateOutput);
     this.push(file);
     callback();

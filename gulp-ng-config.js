@@ -1,11 +1,11 @@
 'use strict';
 
 var through = require('through2'),
-    gutil = require('gulp-util'),
     _ = require('lodash'),
     fs = require('fs'),
     jsYaml = require('js-yaml'),
-    PluginError = gutil.PluginError,
+    replaceExt = require('replace-ext'),
+    PluginError = require('plugin-error'),
     VALID_TYPES = ['constant', 'value'],
     PLUGIN_NAME = 'gulp-ng-config',
     WRAP_TEMPLATE = '(function () { \n return <%= module %>\n})();\n',
@@ -158,7 +158,7 @@ function gulpNgConfig (moduleName, configuration) {
       });
     }
 
-    file.path = gutil.replaceExtension(file.path, '.js');
+    file.path = replaceExt(file.path, '.js');
     file.contents = new Buffer(templateOutput);
     this.push(file);
     callback();

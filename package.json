@@ -1,6 +1,6 @@
 {
   "name": "gulp-ng-config",
-  "version": "1.5.0",
+  "version": "1.5.1",
   "description": "AngularJS configuration generator for a module of constants",
   "main": "index.js",
   "scripts": {
@@ -28,9 +28,10 @@
   },
   "homepage": "https://github.com/ajwhite/gulp-ng-config",
   "dependencies": {
-    "gulp-util": "^3.0.8",
     "js-yaml": "^3.7.0",
     "lodash": "^4.17.3",
+    "plugin-error": "^0.1.2",
+    "replace-ext": "^1.0.0",
     "through2": "^2.0.3"
   },
   "devDependencies": {
